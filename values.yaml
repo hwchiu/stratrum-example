@@ -1,0 +1,3 @@
+image: stratumproject/stratum-bf
+tag: 9.1.0-4.14.49-OpenNetworkLinux
+registry: docker.io
