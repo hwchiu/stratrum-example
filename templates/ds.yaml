@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: straturm-{{.Chart.Name }}
   name: stratum
 spec:
   selector:
