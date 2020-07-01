@@ -24,4 +24,3 @@ onos-classic:
   atomix:
     persistence:
       storageClass: fast-disks
-      size: 1Gi
