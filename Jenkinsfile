@@ -6,7 +6,7 @@ pipeline {
         }
     }
     environment {
-        KUBECONFIG = credentials("tost-dev-k8s")
+        KUBECONFIG = credentials("hwchiu-dev-cluster")
     }
     stages {
         stage('Install tools') {
@@ -88,7 +88,7 @@ pipeline {
         }    
         stage('Install apps') {
             options {
-                timeout(time: 600, unit: "SECONDS")
+                timeout(time: 300, unit: "SECONDS")
             }
             steps {
                 sh '''
@@ -99,7 +99,7 @@ pipeline {
                 rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf
                 
                 apps=$(rancher apps -q)
-                for app in $apps; do rancher wait $app --timeout 360; rancher apps ls; done                
+                for app in $apps; do rancher wait $app --timeout 120; rancher apps ls; done                
                 '''
              }
         }          
@@ -111,4 +111,3 @@ pipeline {
         }
     }    
 }
-
