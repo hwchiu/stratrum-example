@@ -92,9 +92,7 @@ pipeline {
             }
             steps {
                 sh '''
-                ls 
-                ls ${git_repo}/deployment-configs/aether/apps/menlo-prd/stratum.yml
-//                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
+                #rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
                 rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-charles-onos-tost onos-tost
                 rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf
                 
