@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Clone Config Repo') {
             options {
-                timeout(time: 300, unit: "SECONDS")
+                timeout(time: 10, unit: "SECONDS")
             }            
             steps {
                 sh '''
@@ -51,16 +51,27 @@ pipeline {
                 '''
              }
         }
+        stage('Push Secrets') {
+            steps {
+                sh '''
+                kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
+                kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
+                
+                kubectl -n ${onos_ns} delete secret onos-secret --ignore-not-found=true
+                kubectl -n ${onos_ns} create secret generic onos-secret --from-literal=username=${onos_user} --from-literal=password=${onos_password}
+                '''
+            }
+        }
+        
         stage('Uninstall Apps') {
             options {
-                timeout(time: 300, unit: "SECONDS")
+                timeout(time: 90, unit: "SECONDS")
             }            
             steps {
                 sh '''
-                apps=$(rancher apps -q)
-                for app in $apps; do rancher apps delete $app; done
+                for app in $(rancher apps ls -q | grep -E '(onos-tost|stratum|telegraf)'); do rancher apps delete $app; done
                 
-                while [ "$(rancher apps ls -q)" != "" ]; do echo "wait deleted apps"; rancher apps ls ; sleep 1; done
+                until [ "$(rancher apps ls -q | grep -E '(onos-tost|stratum|telegraf)')" = "" ]; do echo "wait deleted apps"; rancher apps ls ; sleep 1; done
                 '''
              }
         }  
@@ -77,18 +88,18 @@ pipeline {
         }    
         stage('Install apps') {
             options {
-                timeout(time: 300, unit: "SECONDS")
+                timeout(time: 600, unit: "SECONDS")
             }
             steps {
                 sh '''
                 ls 
                 ls ${git_repo}/deployment-configs/aether/apps/menlo-prd/stratum.yml
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace stratum ${rancher_context}:stratum-stratum stratum
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace onos-tost ${rancher_context}:onos-charles-onos-tost onos-tost
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace telegraf ${rancher_context}:influxdata-telegraf telegraf
+                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
+                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-charles-onos-tost onos-tost
+                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf
                 
                 apps=$(rancher apps -q)
-                for app in $apps; do rancher wait $app --timeout 120; rancher apps ls; done                
+                for app in $apps; do rancher wait $app --timeout 360; rancher apps ls; done                
                 '''
              }
         }          
@@ -100,3 +111,4 @@ pipeline {
         }
     }    
 }
+
