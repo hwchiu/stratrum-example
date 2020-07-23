@@ -55,7 +55,7 @@ pipeline {
             steps {
                 sh '''
                 
-                kubectl get ns ${onos_ns} || kubectl create ns ${onos_ns}
+                rancher namespaces ls | grep ${onos_ns} || rancher namespaces create ${onos_ns}
                 
                 kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
