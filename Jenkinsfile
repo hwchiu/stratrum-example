@@ -54,6 +54,9 @@ pipeline {
         stage('Push Secrets') {
             steps {
                 sh '''
+                
+                kubectl get ns ${onos_ns} || kubectl create ns ${onos_ns}
+                
                 kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
                 
@@ -93,7 +96,7 @@ pipeline {
             steps {
                 sh '''
                 #rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-charles-onos-tost onos-tost
+                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-onos-tost onos-tost
                 rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf
                 
                 apps=$(rancher apps -q)
@@ -109,3 +112,4 @@ pipeline {
         }
     }    
 }
+
