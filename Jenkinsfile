@@ -95,12 +95,13 @@ pipeline {
             }
             steps {
                 sh '''
-                #rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-onos-tost onos-tost
-                rancher apps install --answers ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf
-                
+                cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
+                #rancher apps install --answers stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
+               
+                until rancher apps install --answers onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-onos-tost onos-tost; do :; done
+                until rancher apps install --answers telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf; do :; done
                 apps=$(rancher apps -q)
-                for app in $apps; do rancher wait $app --timeout 360; rancher apps ls; done                
+                for app in $apps; do until rancher wait $app --timeout 20; do :; done; rancher apps ls; done                
                 '''
              }
         }          
@@ -112,4 +113,3 @@ pipeline {
         }
     }    
 }
-
