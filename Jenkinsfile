@@ -56,9 +56,13 @@ pipeline {
                 sh '''
                 
                 rancher namespaces ls | grep ${onos_ns} || rancher namespaces create ${onos_ns}
+                rancher namespaces ls | grep ${stratum_ns} || rancher namespaces create ${stratum_ns}
                 
                 kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
+
+                kubectl -n ${stratum_ns} delete secret git-secret --ignore-not-found=true
+                kubectl -n ${stratum_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
                 
                 kubectl -n ${onos_ns} delete secret onos-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic onos-secret --from-literal=username=${onos_user} --from-literal=password=${onos_password}
