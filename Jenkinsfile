@@ -39,8 +39,6 @@ pipeline {
             steps {
                 sh '''
                 git clone https://${git_user}:${git_password}@${git_server}/${git_repo}
-                cd ${git_repo}
-                git fetch "https://${git_user}:${git_password}@${git_server}/a/${git_repo}" refs/changes/27/19827/6 && git checkout FETCH_HEAD
                 '''
              }
         }            
@@ -58,6 +56,7 @@ pipeline {
                 rancher namespaces ls | grep ${onos_ns} || rancher namespaces create ${onos_ns}
                 rancher namespaces ls | grep ${stratum_ns} || rancher namespaces create ${stratum_ns}
                 
+                kubectl -n ${onos_ns} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password
                 kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
 
