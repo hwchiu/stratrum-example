@@ -56,7 +56,9 @@ pipeline {
                 rancher namespaces ls | grep ${onos_ns} || rancher namespaces create ${onos_ns}
                 rancher namespaces ls | grep ${stratum_ns} || rancher namespaces create ${stratum_ns}
                 
-                kubectl -n ${onos_ns} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password
+                kubectl -n ${onos_ns} delete secret aether-registry-credential --ignore-not-found=true
+                kubectl -n ${onos_ns} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password}
+
                 kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
 
