@@ -26,6 +26,8 @@ pipeline {
                 tar -xvf rancher-linux-amd64-v2.4.5.tar.gz
                 mv rancher-v2.4.5/rancher /usr/local/bin
                 
+                rm rancher-linux-amd64-v2.4.5.tar.gz
+                rm -rf rancher-v2.4.5
                 # Test Kubectl & Rancher
                 KUBE_CONFIG=$KUBECONFIG kubectl get nodes
                 rancher --version
@@ -93,8 +95,17 @@ pipeline {
     }
     post { 
         always { 
-            cleanWs()
+            cleanWs { // Clean after build
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(true)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
         }
+      }
     }    
 }
 
