@@ -46,6 +46,7 @@ pipeline {
             steps {
                 sh '''
                 rancher login ${rancher_server} --token ${rancher_token} --context ${rancher_context}:${rancher_project}
+                rancher catalog refresh --all
                 '''
              }
         }
@@ -56,11 +57,11 @@ pipeline {
                 rancher namespaces ls | grep ${onos_ns} || rancher namespaces create ${onos_ns}
                 rancher namespaces ls | grep ${stratum_ns} || rancher namespaces create ${stratum_ns}
                 
+                kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
+                kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
                 kubectl -n ${onos_ns} delete secret aether-registry-credential --ignore-not-found=true
                 kubectl -n ${onos_ns} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password}
 
-                kubectl -n ${onos_ns} delete secret git-secret --ignore-not-found=true
-                kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
 
                 kubectl -n ${stratum_ns} delete secret git-secret --ignore-not-found=true
                 kubectl -n ${stratum_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
@@ -101,8 +102,8 @@ pipeline {
             steps {
                 sh '''
                 cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
-                #rancher apps install --answers stratum-ans.yml  --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum
-               
+                #until rancher apps install --answers stratum-ans.yml --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum; do :; done
+
                 until rancher apps install --answers onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-onos-tost onos-tost; do :; done
                 until rancher apps install --answers telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf; do :; done
                 apps=$(rancher apps -q)
@@ -118,3 +119,4 @@ pipeline {
         }
     }    
 }
+
