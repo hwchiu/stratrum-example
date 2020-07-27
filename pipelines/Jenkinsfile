@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        docker { 
+            image 'ubuntu:18.04' 
+            args '-u root:sudo'
+        }
+    }
+    environment {
+        KUBECONFIG = credentials("hwchiu-dev-cluster")
+    }
+    stages {
+        stage('Parallel Stage') {
+            parallel {
+                stage('onos') {
+                    steps {
+                        echo "Here trigger job: jenkins_job_1. Triggered at time:"
+                        sh(script: "date -u")
+                        build(job: "hwchiu-tost-onos")
+                    }
+                }
+                stage('stratum') {
+                    steps {
+                        echo "Here trigger job: jenkins_job_2. Triggered at time:"
+                        sh(script: "date -u")
+                        build(job: "hwchiu-tost-stratum")
+                    }
+                }
+                stage('telegraf') {
+                    steps {
+                        echo "Here trigger job: jenkins_job_2. Triggered at time:"
+                        sh(script: "date -u")
+                        build(job: "hwchiu-tost-telegraf")
+                    }
+                }                
+            }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }    
+}

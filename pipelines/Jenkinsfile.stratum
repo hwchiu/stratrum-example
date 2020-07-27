@@ -95,17 +95,8 @@ pipeline {
     }
     post { 
         always { 
-            cleanWs { // Clean after build
-            cleanWhenAborted(true)
-            cleanWhenFailure(true)
-            cleanWhenNotBuilt(true)
-            cleanWhenSuccess(true)
-            cleanWhenUnstable(true)
-            deleteDirs(true)
-            notFailBuild(true)
-            disableDeferredWipeout(true)
+            cleanWs()
         }
-      }
     }    
 }
 
