@@ -71,7 +71,7 @@ pipeline {
             steps {
                 sh '''
                 cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
-                until rancher apps install --answers telegraf-ans.yml --namespace ${telegraf_ns} ${rancher_context}:influxdata-telegraf telegraf; do :; done
+                until rancher apps install --answers telegraf-ans.yml --namespace ${telegraf_ns} cattle-global-data:influxdata-telegraf telegraf; do :; done
                 apps=$(rancher apps -q | grep telegraf)
                 for app in $apps; do until rancher wait $app --timeout 20; do :; done; rancher apps ls; done                
                 '''

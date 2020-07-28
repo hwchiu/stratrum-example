@@ -84,7 +84,7 @@ pipeline {
             steps {
                 sh '''
                 cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
-                #until rancher apps install --answers stratum-ans.yml --namespace ${stratum_ns} ${rancher_context}:stratum-stratum stratum; do :; done
+                #until rancher apps install --answers stratum-ans.yml --namespace ${stratum_ns} cattle-global-data:stratum-stratum stratum; do :; done
 
                 #apps=$(rancher apps -q | grep stratum)
                 #for app in $apps; do until rancher wait $app --timeout 20; do :; done; rancher apps ls; done                

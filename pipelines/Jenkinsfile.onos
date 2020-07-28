@@ -103,7 +103,7 @@ pipeline {
                 sh '''
                 cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
 
-                until rancher apps install --answers onos-ans.yml --namespace ${onos_ns} ${rancher_context}:onos-onos-tost onos-tost; do :; done
+                until rancher apps install --answers onos-ans.yml --namespace ${onos_ns} cattle-global-data:onos-onos-tost onos-tost; do :; done
                 apps=$(rancher apps -q | grep onos-tost)
                 for app in $apps; do until rancher wait $app --timeout 20; do :; done; rancher apps ls; done                
                 '''
