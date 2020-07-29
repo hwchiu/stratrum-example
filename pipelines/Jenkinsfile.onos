@@ -6,7 +6,7 @@ pipeline {
         }
     }
     environment {
-        KUBECONFIG = credentials("hwchiu-dev-cluster")
+        KUBECONFIG = credentials("${params.k8s_config}")
     }
     stages {
         stage('Install tools') {
@@ -49,7 +49,6 @@ pipeline {
             steps {
                 sh '''
                 rancher login ${rancher_server} --token ${rancher_token} --context ${rancher_context}:${rancher_project}
-                rancher catalog refresh --all
                 '''
              }
         }
