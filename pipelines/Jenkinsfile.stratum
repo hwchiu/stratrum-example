@@ -82,7 +82,7 @@ pipeline {
             }
             steps {
                 sh '''
-                cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
+                cd ${git_repo}/deployment-configs/aether/apps/${config_env}/
                 #until rancher apps install --answers stratum-ans.yml --namespace ${stratum_ns} cattle-global-data:stratum-stratum stratum; do :; done
 
                 #apps=$(rancher apps -q | grep stratum)

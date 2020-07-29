@@ -100,7 +100,7 @@ pipeline {
             }
             steps {
                 sh '''
-                cd ${git_repo}/deployment-configs/aether/apps/menlo-tost-dev/
+                cd ${git_repo}/deployment-configs/aether/apps/${config_env}/
 
                 until rancher apps install --answers onos-ans.yml --namespace ${onos_ns} cattle-global-data:onos-onos-tost onos-tost; do :; done
                 apps=$(rancher apps -q | grep onos-tost)
