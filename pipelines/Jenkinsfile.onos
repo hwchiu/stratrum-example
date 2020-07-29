@@ -7,6 +7,9 @@ pipeline {
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
+        registry_password = credentials("${params.registry_password_env}")
+        git_password = credentials("${params.git_password_env}")
+        rancher_token = credentials("${params.rancher_api_env}")
     }
     stages {
         stage('Install tools') {
