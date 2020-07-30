@@ -43,6 +43,14 @@ pipeline {
             steps {
                 sh '''
                 git clone https://${git_user}:${git_password}@${git_server}/${git_repo}
+                if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
+                    cd ${git_repo}
+                    CFG_LAST2=$(echo ${config_review} | tail -c 3)
+                    git fetch "https://${git_user}:${git_password}@${git_server}/a/${git_repo}" refs/changes/${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
+                    git checkout FETCH_HEAD
+                    cd ..
+                fi
+
                 '''
              }
         }            
