@@ -1,0 +1,226 @@
+- project:
+    name: hwchiu-tost
+    rancher_context: 'c-jt65j'
+    rancher_project: 'p-9ljrz'
+    k8s_config: 'hwchiu-dev-cluster'
+    config_env: 'menlo-tost-dev'
+    jobs:
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+
+- project:
+    name: deploy-menlo-tost-dev
+    rancher_context: 'c-lggdr'
+    rancher_project: 'p-2nd5q'
+    k8s_config: 'tost-dev-k8s'
+    config_env: 'menlo-tost-dev'
+    jobs:
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+
+- project:
+    name: deploy-menlo-tost-prod
+    rancher_context: 'c-5cfd8'
+    rancher_project: 'p-54glz'
+    k8s_config: 'tost-prod-k8s'
+    config_env: 'menlo-prd'
+    rancher_server: 'https://aether.onlab.us/'
+    rancher_api: 'rancher_prod_token'
+    jobs:
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+
+- scm:
+    name: project-scm
+    scm:
+      - git:
+         url: 'https://github.com/hwchiu/stratum-example'
+
+- job-template:
+    name: '{name}-onos'
+    id: 'deploy-onos'
+    rancher_server: 'https://testing.aether.onlab.us/'
+    rancher_api: 'rancher_dev_token'
+    git_server: 'gerrit.opencord.org'
+    git_user: 'hwchiu'
+    git_repo: 'aether-pod-configs'
+    registry_server: 'registry.aetherproject.org'
+    registry_user: 'onfstaff'
+    project-type: pipeline
+    pipeline-scm:
+      scm:
+        - project-scm
+      script-path: pipelines/Jenkinsfile.onos
+    parameters:
+      - string:
+          name: rancher_server
+          default: '{rancher_server}' 
+      - string:
+          name: rancher_context
+          default: '{rancher_context}' 
+      - string:
+          name: rancher_project
+          default: '{rancher_project}' 
+      - string:
+          name: rancher_api_env
+          default: '{rancher_api}'
+      - string:
+          name: git_repo
+          default: '{git_repo}' 
+      - string:
+          name: git_server
+          default: '{git_server}' 
+      - string:
+          name: git_user
+          default: '{git_user}' 
+      - string:
+          name: git_password_env
+          default: 'gerrit_password'
+      - string:
+          name: onos_ns
+          default: 'onos-tost'
+      - string:
+          name: onos_user
+          default: 'onos'
+      - string:
+          name: onos_password
+          default: 'onos_password'
+      - string:
+          name: registry_server
+          default: '{registry_server}'
+      - string:
+          name: registry_user
+          default: '{registry_user}'
+      - string:
+          name: registry_password_env
+          default: 'aether_registry_password'
+      - string:
+          name: config_review
+      - string:
+          name: config_patchset
+      - string:
+          name: config_env
+          default: '{config_env}'
+      - string:
+          name: k8s_config
+          default: '{k8s_config}'
+
+
+- job-template:
+    name: '{name}-stratum'
+    id: 'deploy-stratum'
+    rancher_server: 'https://testing.aether.onlab.us/'
+    rancher_api: 'rancher_dev_token'
+    git_server: 'gerrit.opencord.org'
+    git_user: 'hwchiu'
+    git_repo: 'aether-pod-configs'
+    registry_server: 'registry.aetherproject.org'
+    registry_user: 'onfstaff'
+    project-type: pipeline
+    pipeline-scm:
+      scm:
+        - project-scm
+      script-path: pipelines/Jenkinsfile.stratum
+    parameters:
+      - string:
+          name: rancher_server
+          default: '{rancher_server}' 
+      - string:
+          name: rancher_context
+          default: '{rancher_context}' 
+      - string:
+          name: rancher_project
+          default: '{rancher_project}' 
+      - string:
+          name: rancher_api_env
+          default: '{rancher_api}'
+      - string:
+          name: git_repo
+          default: '{git_repo}' 
+      - string:
+          name: git_server
+          default: '{git_server}' 
+      - string:
+          name: git_user
+          default: '{git_user}' 
+      - string:
+          name: git_password_env
+          default: 'gerrit_password'
+      - string:
+          name: stratum_ns
+          default: 'stratum'
+      - string:
+          name: registry_server
+          default: '{registry_server}'
+      - string:
+          name: registry_user
+          default: '{registry_user}'
+      - string:
+          name: registry_password_env
+          default: 'aether_registry_password'
+      - string:
+          name: config_review
+      - string:
+          name: config_patchset
+      - string:
+          name: config_env
+          default: '{config_env}'
+      - string:
+          name: k8s_config
+          default: '{k8s_config}'
+
+- job-template:
+    name: '{name}-telegraf'
+    id: 'deploy-telegraf'
+    rancher_server: 'https://testing.aether.onlab.us/'
+    rancher_api: 'rancher_dev_token'
+    git_server: 'gerrit.opencord.org'
+    git_user: 'hwchiu'
+    git_repo: 'aether-pod-configs'
+    project-type: pipeline
+    pipeline-scm:
+      scm:
+        - project-scm
+      script-path: pipelines/Jenkinsfile.telegraf
+    parameters:
+      - string:
+          name: rancher_server
+          default: '{rancher_server}' 
+      - string:
+          name: rancher_context
+          default: '{rancher_context}' 
+      - string:
+          name: rancher_project
+          default: '{rancher_project}' 
+      - string:
+          name: rancher_api_env
+          default: '{rancher_api}'
+      - string:
+          name: git_repo
+          default: '{git_repo}' 
+      - string:
+          name: git_server
+          default: '{git_server}' 
+      - string:
+          name: git_user
+          default: '{git_user}' 
+      - string:
+          name: git_password_env
+          default: 'gerrit_password'
+      - string:
+          name: telegraf_ns
+          default: 'telegraf'
+      - string:
+          name: config_review
+      - string:
+          name: config_patchset
+      - string:
+          name: config_env
+          default: '{config_env}'
+      - string:
+          name: k8s_config
+          default: '{k8s_config}'
+
