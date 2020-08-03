@@ -74,6 +74,7 @@ spec:
       labels:
         test: e2e
     spec:
+      terminationGracePeriodSeconds: 5
       initContainers:
       - name: ping-test
         image: alpine:3.12.0
