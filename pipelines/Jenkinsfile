@@ -26,55 +26,46 @@ pipeline {
                 '''
             }
         }
-        stage('Parallel Stage') {
-            parallel {
-                stage('onos') {
-                    steps {
-                        sh(script: "date -u")
-                        build(job: "${params.job_name}-onos")
-                    }
-                }
-                stage('stratum') {
-                    steps {
-                        sh(script: "date -u")
-                        build(job: "${params.job_name}-stratum")
-                    }
-                }
-                stage('telegraf') {
-                    steps {
-                        sh(script: "date -u")
-                        build(job: "${params.job_name}-telegraf")
-                    }
-                }                
-            }
-        }
         stage('E2E Testing') {
             options {
-                timeout(time: 50, unit: "SECONDS")
+                timeout(time: 600, unit: "SECONDS")
             }
             steps {
                 sh """
-
-                #Wait
-cat <<EOF > test.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: test
-  labels:
-    name: test
-spec:
-  containers:
-  - name: test
-    image: alpine:3.12.0
-    command: ["sh", "-c", "until ping ${params.target_server} -c1 -W 4; do echo 'ping retry'; sleep 3; done;"]
-  restartPolicy: Never
-EOF
-
-                kubectl apply -f test.yaml
+                echo ${params.target_server}
+                
                 if [ ! -z "${params.target_server}" ]; then
-                    until [ "\$(kubectl get pods --no-headers test -o custom-columns=':.status.phase')" = "Succeeded" ]; do echo 'wait ping completed'; sleep 5; done;
-                fi 
+                    kubectl delete ds -l test=e2e || true
+cat <<EOF > test.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ping-test
+  labels:
+    test: e2e
+spec:
+  selector:
+    matchLabels:
+      test: e2e
+  template:
+    metadata:
+      labels:
+        test: e2e
+    spec:
+      initContainers:
+      - name: ping-test
+        image: alpine:3.12.0
+        command: ["sh", "-c", "until ping  ${params.target_server} -c1 -W 4; do echo 'ping retry'; sleep 3; done;"]
+      containers:
+      - name: ping-test-wait
+        image: alpine:3.12.0
+        command: ["sh", "-c", "sleep 100000"]
+      restartPolicy: Always
+EOF
+                    kubectl apply -f test.yaml
+                    number=\$(kubectl get --no-headers ds -o custom-columns=':.status.desiredNumberScheduled')
+                    until [ \${number} -eq \$(kubectl get pods -l test=e2e --no-headers  -o custom-columns=':.status.phase' | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
+                fi           
                 """
              }
         }          
@@ -82,8 +73,6 @@ EOF
     post { 
         always { 
             cleanWs()
-            kubectl delete pod test || true
         }
     }    
 }
-
