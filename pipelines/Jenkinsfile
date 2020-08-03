@@ -28,7 +28,7 @@ pipeline {
         }
         stage('E2E Testing') {
             options {
-                timeout(time: 600, unit: "SECONDS")
+                timeout(time: 120, unit: "SECONDS")
             }
             steps {
                 sh """
