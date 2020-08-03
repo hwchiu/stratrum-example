@@ -5,32 +5,59 @@ pipeline {
             args '-u root:sudo'
         }
     }
+    environment {
+        KUBECONFIG = credentials("${params.k8s_config}")
+    }
     stages {
+        stage('Install tools') {
+            steps {
+                sh '''
+                set -x
+                apt-get update -y
+                apt-get install -y curl wget jq git
+                
+                # Install kubectl
+                curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl"
+                chmod +x ./kubectl
+                mv ./kubectl /usr/local/bin/kubectl
+                    
+                # Test Kubectl & Rancher
+                kubectl get nodes
+                '''
+            }
+        }
         stage('Parallel Stage') {
             parallel {
                 stage('onos') {
                     steps {
-                        echo "Here trigger job: jenkins_job_1. Triggered at time:"
                         sh(script: "date -u")
-                        build(job: "hwchiu-tost-onos")
+                        build(job: "${params.job_name}-onos")
                     }
                 }
                 stage('stratum') {
                     steps {
-                        echo "Here trigger job: jenkins_job_2. Triggered at time:"
                         sh(script: "date -u")
-                        build(job: "hwchiu-tost-stratum")
+                        build(job: "${params.job_name}-stratum")
                     }
                 }
                 stage('telegraf') {
                     steps {
-                        echo "Here trigger job: jenkins_job_2. Triggered at time:"
                         sh(script: "date -u")
-                        build(job: "hwchiu-tost-telegraf")
+                        build(job: "${params.job_name}-telegraf")
                     }
                 }                
             }
         }
+        stage('E2E Testing') {
+            options {
+                timeout(time: 600, unit: "SECONDS")
+            }
+            steps {
+                sh '''
+                ecoh "done"
+                '''
+             }
+        }          
     }
     post { 
         always { 
