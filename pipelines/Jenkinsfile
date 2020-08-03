@@ -26,6 +26,28 @@ pipeline {
                 '''
             }
         }
+        stage('Parallel Stage') {
+            parallel {
+                stage('onos') {
+                    steps {
+                        sh(script: "date -u")
+                        build(job: "${params.job_name}-onos")
+                    }
+                }
+                stage('stratum') {
+                    steps {
+                        sh(script: "date -u")
+                        build(job: "${params.job_name}-stratum")
+                    }
+                }
+                stage('telegraf') {
+                    steps {
+                        sh(script: "date -u")
+                        build(job: "${params.job_name}-telegraf")
+                    }
+                }
+            }
+        }
         stage('E2E Testing') {
             options {
                 timeout(time: 120, unit: "SECONDS")
@@ -35,7 +57,7 @@ pipeline {
                 echo ${params.target_server}
                 
                 if [ ! -z "${params.target_server}" ]; then
-                    kubectl delete ds -l test=e2e || true
+                    kubectl delete --wait=true ds -l test=e2e || true
 cat <<EOF > test.yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -64,7 +86,7 @@ spec:
 EOF
                     kubectl apply -f test.yaml
                     number=\$(kubectl get --no-headers ds -o custom-columns=':.status.desiredNumberScheduled')
-                    until [ \${number} -eq \$(kubectl get pods -l test=e2e --no-headers  -o custom-columns=':.status.phase' | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
+                    until [ \${number} -eq \$(kubectl get pods -l test=e2e --no-headers  -o custom-columns=':.status.phase' | grep Running | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
                 fi           
                 """
              }
