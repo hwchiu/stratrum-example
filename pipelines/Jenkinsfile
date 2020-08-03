@@ -96,7 +96,9 @@ EOF
     post { 
         always { 
             sh """
-            kubectl delete -f test.yaml
+            if [ ! -z "${params.target_server}" ]; then
+                kubectl delete -f test.yaml
+            fi
             """
             cleanWs()
         }
