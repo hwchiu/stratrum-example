@@ -50,18 +50,40 @@ pipeline {
         }
         stage('E2E Testing') {
             options {
-                timeout(time: 600, unit: "SECONDS")
+                timeout(time: 50, unit: "SECONDS")
             }
             steps {
-                sh '''
-                ecoh "done"
-                '''
+                sh """
+
+                #Wait
+cat <<EOF > test.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+  labels:
+    name: test
+spec:
+  containers:
+  - name: test
+    image: alpine:3.12.0
+    command: ["sh", "-c", "until ping ${params.target_server} -c1 -W 4; do echo 'ping retry'; sleep 3; done;"]
+  restartPolicy: Never
+EOF
+
+                kubectl apply -f test.yaml
+                if [ ! -z "${params.target_server}" ]; then
+                    until [ "\$(kubectl get pods --no-headers test -o custom-columns=':.status.phase')" = "Succeeded" ]; do echo 'wait ping completed'; sleep 5; done;
+                fi 
+                """
              }
         }          
     }
     post { 
         always { 
             cleanWs()
+            kubectl delete pod test || true
         }
     }    
 }
+
