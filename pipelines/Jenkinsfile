@@ -55,24 +55,24 @@ pipeline {
             steps {
                 sh """
                 echo ${params.target_server}
-                
+                timestamp=\$(date +%s)
                 if [ ! -z "${params.target_server}" ]; then
                     kubectl delete --wait=true ds -l test=e2e || true
 cat <<EOF > test.yaml
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: ping-test
+  name: ping-test-\${timestamp}
   labels:
-    test: e2e
+    test: e2e-\${timestamp}
 spec:
   selector:
     matchLabels:
-      test: e2e
+      test: e2e-\${timestamp}
   template:
     metadata:
       labels:
-        test: e2e
+        test: e2e-\${timestamp}
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:
@@ -87,7 +87,7 @@ spec:
 EOF
                     kubectl apply -f test.yaml
                     number=\$(kubectl get --no-headers ds -o custom-columns=':.status.desiredNumberScheduled')
-                    until [ \${number} -eq \$(kubectl get pods -l test=e2e --no-headers  -o custom-columns=':.status.phase' | grep Running | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
+                    until [ \${number} -eq \$(kubectl get pods -l test=e2e-\${timestamp} --no-headers  -o custom-columns=':.status.phase' | grep Running | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
                 fi           
                 """
              }
@@ -95,6 +95,9 @@ EOF
     }
     post { 
         always { 
+            sh """
+            kubectl delete -f test.yaml
+            """
             cleanWs()
         }
     }    
