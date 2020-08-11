@@ -5,6 +5,7 @@
     k8s_config: 'hwchiu-dev-cluster'
     config_env: 'menlo-tost-dev'
     jobs:
+      - 'deploy'
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
@@ -16,22 +17,22 @@
     k8s_config: 'tost-dev-k8s'
     config_env: 'menlo-tost-dev'
     jobs:
+      - 'deploy'
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
-
-- project:
-    name: deploy-menlo-tost-prod
-    rancher_context: 'c-5cfd8'
-    rancher_project: 'p-54glz'
-    k8s_config: 'tost-prod-k8s'
-    config_env: 'menlo-prd'
-    rancher_server: 'https://aether.onlab.us/'
-    rancher_api: 'rancher_prod_token'
-    jobs:
-      - 'deploy-onos'
-      - 'deploy-stratum'
-      - 'deploy-telegraf'
+        #- project:
+        #    name: deploy-menlo-tost-prod2
+        #    rancher_context: 'c-5cfd8'
+        #    rancher_project: 'p-54glz'
+        #    k8s_config: 'tost-prod-k8s'
+        #    config_env: 'menlo-prd'
+        #    rancher_server: 'https://aether.onlab.us/'
+        #    rancher_api: 'rancher_prod_token'
+        #    jobs:
+        #      - 'deploy-onos'
+        #      - 'deploy-stratum'
+        #      - 'deploy-telegraf'
 
 - scm:
     name: project-scm
@@ -45,7 +46,7 @@
     rancher_server: 'https://testing.aether.onlab.us/'
     rancher_api: 'rancher_dev_token'
     git_server: 'gerrit.opencord.org'
-    git_user: 'hwchiu'
+    git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
     registry_user: 'onfstaff'
@@ -79,6 +80,9 @@
       - string:
           name: git_password_env
           default: 'gerrit_password'
+      - string:
+          name: onos_catalog_name
+          default: 'onos'
       - string:
           name: onos_ns
           default: 'onos-tost'
@@ -115,7 +119,7 @@
     rancher_server: 'https://testing.aether.onlab.us/'
     rancher_api: 'rancher_dev_token'
     git_server: 'gerrit.opencord.org'
-    git_user: 'hwchiu'
+    git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
     registry_user: 'onfstaff'
@@ -153,6 +157,9 @@
           name: stratum_ns
           default: 'stratum'
       - string:
+          name: stratum_catalog_name
+          default: 'stratum'
+      - string:
           name: registry_server
           default: '{registry_server}'
       - string:
@@ -178,7 +185,7 @@
     rancher_server: 'https://testing.aether.onlab.us/'
     rancher_api: 'rancher_dev_token'
     git_server: 'gerrit.opencord.org'
-    git_user: 'hwchiu'
+    git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     project-type: pipeline
     pipeline-scm:
@@ -220,6 +227,25 @@
       - string:
           name: config_env
           default: '{config_env}'
+      - string:
+          name: k8s_config
+          default: '{k8s_config}'
+
+
+- job-template:
+    name: '{name}'
+    id: 'deploy'
+    project-type: pipeline
+    pipeline-scm:
+      scm:
+        - project-scm
+      script-path: pipelines/Jenkinsfile
+    parameters:
+      - string:
+          name: job_name
+          default: '{name}'
+      - string:
+          name: target_server
       - string:
           name: k8s_config
           default: '{k8s_config}'

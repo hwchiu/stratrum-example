@@ -74,6 +74,7 @@ spec:
       labels:
         test: e2e-\${timestamp}
     spec:
+      hostNetwork: true
       terminationGracePeriodSeconds: 5
       initContainers:
       - name: ping-test
@@ -86,7 +87,8 @@ spec:
       restartPolicy: Always
 EOF
                     kubectl apply -f test.yaml
-                    number=\$(kubectl get --no-headers ds -o custom-columns=':.status.desiredNumberScheduled')
+                    number=\$(kubectl get --no-headers ds -ltest=e2e-\${timestamp} -o custom-columns=':.status.desiredNumberScheduled')
+                    echo "\${number}"
                     until [ \${number} -eq \$(kubectl get pods -l test=e2e-\${timestamp} --no-headers  -o custom-columns=':.status.phase' | grep Running | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
                 fi           
                 """
