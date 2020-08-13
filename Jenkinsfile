@@ -1,11 +1,5 @@
 pipeline {
-    parameters {
-        string(name: 'BUILD_NODE', defaultValue: 'p4-dev', description: 'Build Machine')
-    }
     agent {
-        agent {
-            label "${BUILD_NODE}"
-        }
         docker { 
             image 'ubuntu:18.04' 
             args '-u root:sudo'
