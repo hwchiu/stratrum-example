@@ -11,6 +11,7 @@ pipeline {
                 sh '''
                 set -x
                 ls
+                cat Jenkinsfile
                 '''
             }
         }
