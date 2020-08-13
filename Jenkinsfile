@@ -6,19 +6,19 @@ pipeline {
         }
     }
     stages {
-        stage('Cleanup Workspace') {
+        stage('Code Checkout') {
             steps {
-                cleanWs()
-                sh """
-                echo "Cleaned Up Workspace For Project"
-                """
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']]
+                ])
             }
         }
         stage('Install tools') {
             steps {
                 sh '''
                 set -x
-                echo "test"
+                ls
                 '''
             }
         }
