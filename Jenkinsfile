@@ -5,9 +5,6 @@ pipeline {
             args '-u root:sudo'
         }
     }
-    environment {
-        KUBECONFIG = credentials("hwchiu-dev-cluster")
-    }
     stages {
         stage('Install tools') {
             steps {
