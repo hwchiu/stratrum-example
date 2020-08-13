@@ -18,11 +18,15 @@ pipeline {
             steps {
                 sh '''
                 set -x
-                apt-get update -y
-                apt-get install -y curl wget jq git
+                echo "test"
                 '''
             }
         }
     }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }    
 }
 
