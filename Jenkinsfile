@@ -6,14 +6,6 @@ pipeline {
         }
     }
     stages {
-        stage('Code Checkout') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']]
-                ])
-            }
-        }
         stage('Install tools') {
             steps {
                 sh '''
