@@ -22,6 +22,17 @@ pipeline {
                 '''
             }
         }
+        stage('Publish') {
+            when {
+               branch 'master'
+            }
+            steps {
+                sh '''
+                set -x
+                echo 'publish'
+                '''
+            }
+        }
     }
     post { 
         always { 
