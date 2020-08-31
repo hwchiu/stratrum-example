@@ -49,7 +49,7 @@
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
-    registry_user: 'onfstaff'
+    registry_user: 'admin'
     project-type: pipeline
     pipeline-scm:
       scm:
@@ -122,7 +122,7 @@
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
-    registry_user: 'onfstaff'
+    registry_user: 'admin'
     project-type: pipeline
     pipeline-scm:
       scm:
