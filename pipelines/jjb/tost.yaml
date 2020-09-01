@@ -9,7 +9,9 @@
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
-      - 'deploy-fluentbit'
+      - 'deploy-fluentbit':
+         rancher_project: 'p-ckcnb'
+
 
 - project:
     name: deploy-menlo-tost-dev
@@ -22,6 +24,9 @@
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
+      - 'deploy-fluentbit':
+         rancher_project: 'p-npzjd'
+
         #- project:
         #    name: deploy-menlo-tost-prod2
         #    rancher_context: 'c-5cfd8'
