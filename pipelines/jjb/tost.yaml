@@ -9,21 +9,19 @@
       - 'deploy-stratum'
       - 'deploy-telegraf'
       - 'deploy-fluentbit':
-         rancher_project: 'p-ckcnb'
 
+- project:
+    name: deploy-menlo-tost-dev
+    rancher_cluster: 'tost-dev'
+    k8s_config: 'tost-dev-k8s'
+    config_env: 'menlo-tost-dev'
+    jobs:
+      - 'deploy'
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+        #      - 'deploy-fluentbit':
 
-         #- project:
-         #    name: deploy-menlo-tost-dev
-         #    k8s_config: 'tost-dev-k8s'
-         #    config_env: 'menlo-tost-dev'
-         #    jobs:
-         #      - 'deploy'
-         #      - 'deploy-onos'
-         #      - 'deploy-stratum'
-         #      - 'deploy-telegraf'
-         #      - 'deploy-fluentbit':
-         #         rancher_project: 'p-npzjd'
-         #
         #- project:
         #    name: deploy-menlo-tost-prod2
         #    k8s_config: 'tost-prod-k8s'
@@ -51,12 +49,16 @@
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
     registry_user: 'admin'
+    gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     pipeline-scm:
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.onos
     parameters:
+      - string:
+          name: gcp_credential
+          default: '{gcp_credential}'
       - string:
           name: rancher_cluster
           default: '{rancher_cluster}'
@@ -114,12 +116,16 @@
     git_repo: 'aether-pod-configs'
     registry_server: 'registry.aetherproject.org'
     registry_user: 'admin'
+    gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     pipeline-scm:
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.stratum
     parameters:
+      - string:
+          name: gcp_credential
+          default: '{gcp_credential}'
       - string:
           name: rancher_cluster
           default: '{rancher_cluster}'
@@ -168,12 +174,16 @@
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
+    gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     pipeline-scm:
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.telegraf
     parameters:
+      - string:
+          name: gcp_credential
+          default: '{gcp_credential}'
       - string:
           name: rancher_cluster
           default: '{rancher_cluster}'
@@ -211,12 +221,16 @@
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
+    gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     pipeline-scm:
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.fluentbit
     parameters:
+      - string:
+          name: gcp_credential
+          default: '{gcp_credential}'
       - string:
           name: rancher_cluster
           default: '{rancher_cluster}'
@@ -254,6 +268,7 @@
     git_repo: 'aether-pod-configs'
     rancher_api: 'Rancher_Dev_Terraform'
 
+    gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     pipeline-scm:
       scm:
@@ -263,6 +278,9 @@
       - string:
           name: job_name
           default: '{name}'
+      - string:
+          name: gcp_credential
+          default: '{gcp_credential}'
       - string:
           name: target_server
       - string:

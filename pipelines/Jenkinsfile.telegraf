@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
-        gcp = credentials("gcp_bucket_terraform")
+        gcp = credentials("{params.gcp_credential}")
         rancher_dev = credentials("${params.rancher_api_env}")
     }
     stages {
@@ -76,7 +76,7 @@ EOF
             steps {
                 sh '''
                 cd ${git_repo}/testing/tost/telegraf
-                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=hwchiu-dev' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
+                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
                 '''
              }
         }  
@@ -87,7 +87,7 @@ EOF
             steps {
                 sh '''
                 cd ${git_repo}/testing/tost/telegraf
-                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=hwchiu-dev'  -var 'project_name=tost'  -var-file=app_map.tfvars -auto-approve
+                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}'  -var 'project_name=tost'  -var-file=app_map.tfvars -auto-approve
                 '''
              }
         }          
