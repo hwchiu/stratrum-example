@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Install tools') {
             steps {
-                sh '''
+                sh """
                 set -x
                 apt-get update -y
                 apt-get install -y curl wget jq git unzip
@@ -30,7 +30,7 @@ pipeline {
                 unzip terraform_0.13.2_linux_amd64.zip
                 mv terraform /usr/local/bin
                 terraform version
-                '''
+                """
             }
         }
     stage('Init Terraform') {
@@ -64,7 +64,7 @@ EOF
                 timeout(time: 10, unit: "SECONDS")
             }
             steps {
-                sh '''
+                sh """
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
                     cd ${git_repo}
                     CFG_LAST2=$(echo ${config_review} | tail -c 3)
@@ -73,7 +73,7 @@ EOF
                     echo "config.patchset: ${config_patchset}" >> deployment-configs/aether/apps/${config_env}/onos-ans.yml
                     cd ..
                 fi
-                '''
+                """
              }
         }
 
@@ -83,10 +83,10 @@ EOF
                 timeout(time: 90, unit: "SECONDS")
             }
             steps {
-                sh '''
+                sh """
                 cd ${git_repo}/testing/tost/onos
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
-                '''
+                """
              }
         }
         stage('Remove PVC') {
@@ -94,10 +94,10 @@ EOF
                 timeout(time: 300, unit: "SECONDS")
             }
             steps {
-                sh '''
+                sh """
                 pvcs=$(kubectl -n onos-tost get pvc -lapp=onos-tost-atomix -o name)
                 for pv in $pvcs; do kubectl -n onos-tost delete $pv; done
-                '''
+                """
              }
         }
         stage('Install apps') {
@@ -105,20 +105,20 @@ EOF
                 timeout(time: 600, unit: "SECONDS")
             }
             steps {
-                sh '''
+                sh """
                 cd ${git_repo}/testing/tost/onos
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
-                '''
+                """
              }
         }
         stage('Push Secrets') {
             steps {
-                sh '''
+                sh """
 
                 kubectl -n ${onos_ns} create secret generic git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
                 kubectl -n ${onos_ns} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password}
                 kubectl -n ${onos_ns} create secret generic onos-secret --from-literal=username=${onos_user} --from-literal=password=${onos_password}
-                '''
+                """
             }
         }
 
