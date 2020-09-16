@@ -3,6 +3,7 @@
     rancher_cluster: 'hwchiu-dev'
     k8s_config: 'hwchiu-dev-cluster'
     config_env: 'menlo-tost-dev'
+    repo_dir: 'testing'
     jobs:
       - 'deploy'
       - 'deploy-onos'
@@ -15,6 +16,7 @@
     rancher_cluster: 'tost-dev'
     k8s_config: 'tost-dev-k8s'
     config_env: 'menlo-tost-dev'
+    repo_dir: 'developing'
     jobs:
       - 'deploy'
       - 'deploy-onos'
@@ -77,6 +79,9 @@
       - string:
           name: git_password_env
           default: 'gerrit_password'
+      - string:
+          name: repo_dir
+          default: '{repo_dir}'
       - string:
           name: onos_catalog_name
           default: 'onos'
@@ -148,6 +153,9 @@
           name: git_password_env
           default: 'gerrit_password'
       - string:
+          name: repo_dir
+          default: '{repo_dir}'
+      - string:
           name: stratum_ns
           default: 'stratum'
       - string:
@@ -206,6 +214,9 @@
           name: git_user
           default: '{git_user}' 
       - string:
+          name: repo_dir
+          default: '{repo_dir}'
+      - string:
           name: telegraf_ns
           default: 'telegraf'
       - string:
@@ -252,6 +263,9 @@
       - string:
           name: git_user
           default: '{git_user}' 
+      - string:
+          name: repo_dir
+          default: '{repo_dir}'
       - string:
           name: fluentbit_ns
           default: 'logging'
@@ -307,4 +321,6 @@
       - string:
           name: rancher_cluster
           default: '{rancher_cluster}'
-
+      - string:
+          name: repo_dir
+          default: '{repo_dir}'
