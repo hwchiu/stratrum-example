@@ -9,6 +9,7 @@ pipeline {
         KUBECONFIG = credentials("${params.k8s_config}")
         registry_password = credentials("${params.registry_password_env}")
         onos_password = credentials("${params.onos_password}")
+        git_password = credentials("${params.git_password_env}")
         gcp = credentials("${params.gcp_credential}")
         rancher_dev = credentials("${params.rancher_api_env}")
     }
@@ -96,7 +97,7 @@ EOF
             steps {
                 sh """
                 pvcs=\$(kubectl -n onos-tost get pvc -lapp=onos-tost-atomix -o name)
-                for pv in \$pvcs; do kubectl -n onos-tost delete $pv; done
+                for pv in \${pvcs}; do kubectl -n onos-tost delete \${pv}; done
                 """
              }
         }

@@ -75,6 +75,9 @@
           name: git_user
           default: '{git_user}' 
       - string:
+          name: git_password_env
+          default: 'gerrit_password'
+      - string:
           name: onos_catalog_name
           default: 'onos'
       - string:
@@ -141,6 +144,9 @@
       - string:
           name: git_user
           default: '{git_user}' 
+      - string:
+          name: git_password_env
+          default: 'gerrit_password'
       - string:
           name: stratum_ns
           default: 'stratum'
