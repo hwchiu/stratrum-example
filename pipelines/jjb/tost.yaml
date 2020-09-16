@@ -1,7 +1,6 @@
 - project:
     name: hwchiu-tost
-    rancher_context: 'c-jt65j'
-    rancher_project: 'p-9ljrz'
+    rancher_cluster: 'hwchiu-dev'
     k8s_config: 'hwchiu-dev-cluster'
     config_env: 'menlo-tost-dev'
     jobs:
@@ -13,28 +12,23 @@
          rancher_project: 'p-ckcnb'
 
 
-- project:
-    name: deploy-menlo-tost-dev
-    rancher_context: 'c-lggdr'
-    rancher_project: 'p-2nd5q'
-    k8s_config: 'tost-dev-k8s'
-    config_env: 'menlo-tost-dev'
-    jobs:
-      - 'deploy'
-      - 'deploy-onos'
-      - 'deploy-stratum'
-      - 'deploy-telegraf'
-      - 'deploy-fluentbit':
-         rancher_project: 'p-npzjd'
-
+         #- project:
+         #    name: deploy-menlo-tost-dev
+         #    k8s_config: 'tost-dev-k8s'
+         #    config_env: 'menlo-tost-dev'
+         #    jobs:
+         #      - 'deploy'
+         #      - 'deploy-onos'
+         #      - 'deploy-stratum'
+         #      - 'deploy-telegraf'
+         #      - 'deploy-fluentbit':
+         #         rancher_project: 'p-npzjd'
+         #
         #- project:
         #    name: deploy-menlo-tost-prod2
-        #    rancher_context: 'c-5cfd8'
-        #    rancher_project: 'p-54glz'
         #    k8s_config: 'tost-prod-k8s'
         #    config_env: 'menlo-prd'
-        #    rancher_server: 'https://aether.onlab.us/'
-        #    rancher_api: 'rancher_prod_token'
+        #    rancher_api: 'Rancher_Prod_Terraform'
         #    jobs:
         #      - 'deploy-onos'
         #      - 'deploy-stratum'
@@ -45,12 +39,13 @@
     scm:
       - git:
          url: 'https://github.com/hwchiu/stratum-example'
+         branches:
+          - origin/terraform
 
 - job-template:
     name: '{name}-onos'
     id: 'deploy-onos'
-    rancher_server: 'https://testing.aether.onlab.us/'
-    rancher_api: 'rancher_dev_token'
+    rancher_api: 'Rancher_Dev_Terraform'
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
@@ -63,14 +58,8 @@
       script-path: pipelines/Jenkinsfile.onos
     parameters:
       - string:
-          name: rancher_server
-          default: '{rancher_server}' 
-      - string:
-          name: rancher_context
-          default: '{rancher_context}' 
-      - string:
-          name: rancher_project
-          default: '{rancher_project}' 
+          name: rancher_cluster
+          default: '{rancher_cluster}'
       - string:
           name: rancher_api_env
           default: '{rancher_api}'
@@ -83,9 +72,6 @@
       - string:
           name: git_user
           default: '{git_user}' 
-      - string:
-          name: git_password_env
-          default: 'gerrit_password'
       - string:
           name: onos_catalog_name
           default: 'onos'
@@ -122,8 +108,7 @@
 - job-template:
     name: '{name}-stratum'
     id: 'deploy-stratum'
-    rancher_server: 'https://testing.aether.onlab.us/'
-    rancher_api: 'rancher_dev_token'
+    rancher_api: 'Rancher_Dev_Terraform'
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
@@ -136,14 +121,8 @@
       script-path: pipelines/Jenkinsfile.stratum
     parameters:
       - string:
-          name: rancher_server
-          default: '{rancher_server}' 
-      - string:
-          name: rancher_context
-          default: '{rancher_context}' 
-      - string:
-          name: rancher_project
-          default: '{rancher_project}' 
+          name: rancher_cluster
+          default: '{rancher_cluster}'
       - string:
           name: rancher_api_env
           default: '{rancher_api}'
@@ -156,9 +135,6 @@
       - string:
           name: git_user
           default: '{git_user}' 
-      - string:
-          name: git_password_env
-          default: 'gerrit_password'
       - string:
           name: stratum_ns
           default: 'stratum'
@@ -188,8 +164,7 @@
 - job-template:
     name: '{name}-telegraf'
     id: 'deploy-telegraf'
-    rancher_server: 'https://testing.aether.onlab.us/'
-    rancher_api: 'rancher_dev_token'
+    rancher_api: 'Rancher_Dev_Terraform'
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
@@ -200,14 +175,8 @@
       script-path: pipelines/Jenkinsfile.telegraf
     parameters:
       - string:
-          name: rancher_server
-          default: '{rancher_server}' 
-      - string:
-          name: rancher_context
-          default: '{rancher_context}' 
-      - string:
-          name: rancher_project
-          default: '{rancher_project}' 
+          name: rancher_cluster
+          default: '{rancher_cluster}'
       - string:
           name: rancher_api_env
           default: '{rancher_api}'
@@ -220,9 +189,6 @@
       - string:
           name: git_user
           default: '{git_user}' 
-      - string:
-          name: git_password_env
-          default: 'gerrit_password'
       - string:
           name: telegraf_ns
           default: 'telegraf'
@@ -241,8 +207,7 @@
 - job-template:
     name: '{name}-fluentbit'
     id: 'deploy-fluentbit'
-    rancher_server: 'https://testing.aether.onlab.us/'
-    rancher_api: 'rancher_dev_token'
+    rancher_api: 'Rancher_Dev_Terraform'
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
@@ -253,14 +218,8 @@
       script-path: pipelines/Jenkinsfile.fluentbit
     parameters:
       - string:
-          name: rancher_server
-          default: '{rancher_server}' 
-      - string:
-          name: rancher_context
-          default: '{rancher_context}' 
-      - string:
-          name: rancher_project
-          default: '{rancher_project}' 
+          name: rancher_cluster
+          default: '{rancher_cluster}'
       - string:
           name: rancher_api_env
           default: '{rancher_api}'
@@ -273,9 +232,6 @@
       - string:
           name: git_user
           default: '{git_user}' 
-      - string:
-          name: git_password_env
-          default: 'gerrit_password'
       - string:
           name: fluentbit_ns
           default: 'logging'
@@ -293,6 +249,11 @@
 - job-template:
     name: '{name}'
     id: 'deploy'
+    git_server: 'gerrit.opencord.org'
+    git_user: 'aether_jenkins'
+    git_repo: 'aether-pod-configs'
+    rancher_api: 'Rancher_Dev_Terraform'
+
     project-type: pipeline
     pipeline-scm:
       scm:
@@ -307,4 +268,15 @@
       - string:
           name: k8s_config
           default: '{k8s_config}'
-
+      - string:
+          name: rancher_api_env
+          default: '{rancher_api}'
+      - string:
+          name: git_repo
+          default: '{git_repo}' 
+      - string:
+          name: git_server
+          default: '{git_server}' 
+      - string:
+          name: git_user
+          default: '{git_user}' 
