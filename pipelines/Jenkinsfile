@@ -1,13 +1,13 @@
 pipeline {
     agent {
-        docker { 
-            image 'ubuntu:18.04' 
+        docker {
+            image 'ubuntu:18.04'
             args '-u root:sudo'
         }
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
-        gcp = credentials("{params.gcp_credential}")
+        gcp = credentials("${params.gcp_credential}")
         rancher_dev = credentials("${params.rancher_api_env}")
     }
     stages {
@@ -17,15 +17,15 @@ pipeline {
                 set -x
                 apt-get update -y
                 apt-get install -y curl wget jq git unzip
-                
+
                 # Install kubectl
                 curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl"
                 chmod +x ./kubectl
                 mv ./kubectl /usr/local/bin/kubectl
-                    
+
                 # Test Kubectl & Rancher
                 kubectl get nodes
-                
+
                 # Install
                 wget https://releases.hashicorp.com/terraform/0.13.2/terraform_0.13.2_linux_amd64.zip
                 unzip terraform_0.13.2_linux_amd64.zip
@@ -34,11 +34,11 @@ pipeline {
                 '''
             }
         }
-    
+
         stage('Init Terraform') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins", keyFileVariable: 'keyfile')]) {
-                
+
                 sh """#!/bin/bash
                 set -x
                 mkdir -p ~/.ssh
@@ -56,7 +56,7 @@ EOF
                 git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/03/20503/3 && git checkout -b change-20503-3 FETCH_HEAD
                 cd testing/tost
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
-                ls                
+                ls
                 """
                 }
             }
@@ -67,7 +67,7 @@ EOF
                 cd ${git_repo}/testing/tost
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var-file=app_map.tfvars -auto-approve
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var-file=app_map.tfvars -auto-approve
-   
+
                 """
              }
         }
@@ -135,13 +135,13 @@ EOF
                     number=\$(kubectl get --no-headers ds -ltest=e2e-\${timestamp} -o custom-columns=':.status.desiredNumberScheduled')
                     echo "\${number}"
                     until [ \${number} -eq \$(kubectl get pods -l test=e2e-\${timestamp} --no-headers  -o custom-columns=':.status.phase' | grep Running | wc -l) ]; do echo 'wait ping completed'; sleep 5; done;
-                fi           
+                fi
                 """
              }
-        }          
+        }
     }
-    post { 
-        always { 
+    post {
+        always {
             sh """
             if [ ! -z "${params.target_server}" ]; then
                 kubectl delete -f test.yaml
@@ -149,5 +149,5 @@ EOF
             """
             cleanWs()
         }
-    }    
+    }
 }
