@@ -67,7 +67,7 @@ EOF
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
                     cd ${git_repo}
                     CFG_LAST2=\$(echo ${config_review} | tail -c 3)
-                    git fetch "ssh://@${git_server}:29418/${git_repo}" refs/changes/${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
+                    git fetch "ssh://@${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
                     echo "config.review: ${config_review}" >> deployment-configs/aether/apps/${config_env}/stratum-ans.yml
                     echo "config.patchset: ${config_patchset}" >> deployment-configs/aether/apps/${config_env}/stratum-ans.yml
                     cd ..
