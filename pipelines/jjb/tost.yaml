@@ -298,3 +298,7 @@
       - string:
           name: git_user
           default: '{git_user}' 
+      - string:
+          name: rancher_cluster
+          default: '{rancher_cluster}'
+
