@@ -39,8 +39,8 @@
     scm:
       - git:
          url: 'https://github.com/hwchiu/stratum-example'
-         branches:
-          - origin/terraform
+         #         branches:
+         # - origin/terraform
 
 - job-template:
     name: '{name}-onos'
