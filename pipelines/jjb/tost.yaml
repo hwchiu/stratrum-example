@@ -57,6 +57,11 @@
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.onos
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
     parameters:
       - string:
           name: gcp_credential
@@ -130,6 +135,11 @@
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.stratum
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
     parameters:
       - string:
           name: gcp_credential
@@ -194,6 +204,11 @@
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.telegraf
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
     parameters:
       - string:
           name: gcp_credential
@@ -244,6 +259,11 @@
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile.fluentbit
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
     parameters:
       - string:
           name: gcp_credential
@@ -294,6 +314,11 @@
       scm:
         - project-scm
       script-path: pipelines/Jenkinsfile
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
     parameters:
       - string:
           name: job_name
