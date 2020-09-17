@@ -52,9 +52,7 @@ Host ${git_server}
 EOF
 
                 git clone "ssh://${git_server}:29418/${git_repo}"
-                cd ${git_repo}
-                git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/03/20503/8 && git checkout -b change-20503-8 FETCH_HEAD
-                cd ${terraform_dir}/tost
+                cd ${git_repo}/${terraform_dir}/tost
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
                 ls
                 """
