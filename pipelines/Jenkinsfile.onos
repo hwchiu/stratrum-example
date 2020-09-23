@@ -74,16 +74,6 @@ EOF
                 }
             }
         }
-        stage('Clone Config Repo') {
-            options {
-                timeout(time: 10, unit: "SECONDS")
-            }
-            steps {
-                sh """
-                """
-             }
-        }
-
 
         stage('Uninstall Apps') {
             options {
