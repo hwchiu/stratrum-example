@@ -1,28 +1,38 @@
-#- project:
-#    name: hwchiu-tost
-#    rancher_cluster: 'hwchiu-dev'
-#    k8s_config: 'hwchiu-dev-cluster'
-#    config_env: 'menlo-tost-dev'
-#    terraform_dir: 'testing'
-#    jobs:
-#      - 'deploy'
-#      - 'deploy-onos'
-#      - 'deploy-stratum'
-#      - 'deploy-telegraf'
-#      - 'deploy-fluentbit':
-#
-#- project:
-#    name: deploy-menlo-tost-dev
-#    rancher_cluster: 'tost-dev'
-#    k8s_config: 'tost-dev-k8s'
-#    config_env: 'menlo-tost-dev'
-#    terraform_dir: 'developing'
-#    jobs:
-#      - 'deploy'
-#      - 'deploy-onos'
-#      - 'deploy-stratum'
-#      - 'deploy-telegraf'
-#        #      - 'deploy-fluentbit':
+- project:
+    name: hwchiu-tost
+    rancher_cluster: 'hwchiu-dev'
+    k8s_config: 'hwchiu-dev-cluster'
+    config_env: 'menlo-tost-dev'
+    terraform_dir: 'testing'
+    #remove after migrating to terraform
+    rancher_context: 'c-jt65j'
+    rancher_project: 'p-ckcnb'
+    rancher_server: 'https://testing.aether.onlab.us/'
+    rancher_cli_api: 'rancher_dev_token'
+    jobs:
+      - 'deploy'
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+      - 'deploy-fluentbit'
+
+- project:
+    name: deploy-menlo-tost-dev
+    rancher_cluster: 'tost-dev'
+    k8s_config: 'tost-dev-k8s'
+    config_env: 'menlo-tost-dev'
+    terraform_dir: 'developing'
+    #remove after migrating to terraform
+    rancher_context: 'c-lggdr'
+    rancher_project: 'p-npzjd'
+    rancher_server: 'https://testing.aether.onlab.us/'
+    rancher_cli_api: 'rancher_dev_token'
+    jobs:
+      - 'deploy'
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+      - 'deploy-fluentbit'
 
 - project:
     name: deploy-menlo-production
