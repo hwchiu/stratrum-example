@@ -51,6 +51,7 @@
     scm_type: 'prod-scm'
     jobs:
       - 'deploy'
+      - 'deploy-shared'
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
