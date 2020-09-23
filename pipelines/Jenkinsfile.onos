@@ -7,7 +7,6 @@ pipeline {
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
-        registry_password = credentials("${params.registry_password_env}")
         onos_password = credentials("${params.onos_password}")
         git_password = credentials("${params.git_password_env}")
         gcp = credentials("${params.gcp_credential}")

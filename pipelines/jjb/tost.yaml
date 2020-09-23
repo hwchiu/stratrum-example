@@ -388,7 +388,7 @@
     pipeline-scm:
       scm:
         - '{scm_type}'
-      script-path: pipelines/Jenkinsfile
+      script-path: pipelines/Jenkinsfile.shared
     logrotate:
       daysToKeep: 7
       numToKeep: 10
@@ -410,3 +410,7 @@
       - string:
           name: target_namespace
           default: '{target_namespace}'
+      - string:
+          name: k8s_config
+          default: '{k8s_config}'
+
