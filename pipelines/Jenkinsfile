@@ -139,13 +139,13 @@ EOF
     }
     post {
         always {
-            cleanWs()
             sh """
             if [ ! -z "${params.target_server}" ]; then
                 kubectl delete -f test.yaml
             fi
-            ls
+            rm -rf ${workspace}/${git_repo}
             """
+            cleanWs()
         }
     }
 }

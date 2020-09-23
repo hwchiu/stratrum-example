@@ -133,6 +133,10 @@ EOF
     }
     post {
         always {
+
+            sh """
+            rm -rf ${workspace}/${git_repo}
+            """
             cleanWs()
         }
     }
