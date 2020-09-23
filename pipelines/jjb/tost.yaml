@@ -3,7 +3,7 @@
     rancher_cluster: 'hwchiu-dev'
     k8s_config: 'hwchiu-dev-cluster'
     config_env: 'menlo-tost-dev'
-    terraform_dir: 'testing'
+    terraform_dir: 'testing/ace-menlo'
     #remove after migrating to terraform
     rancher_context: 'c-jt65j'
     rancher_project: 'p-ckcnb'
@@ -21,7 +21,7 @@
     rancher_cluster: 'tost-dev'
     k8s_config: 'tost-dev-k8s'
     config_env: 'menlo-tost-dev'
-    terraform_dir: 'developing'
+    terraform_dir: 'developing/ace-menlo'
     #remove after migrating to terraform
     rancher_context: 'c-lggdr'
     rancher_project: 'p-npzjd'
