@@ -45,7 +45,7 @@ Host ${git_server}
   IdentityFile ${keyfile}
 EOF
                 git clone "ssh://${git_server}:29418/${git_repo}"
-                cd ${git_repo}/${terraform_dir}/tost/telegraf
+                cd ${workspace}/${git_repo}/${terraform_dir}/tost/telegraf
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
                     CFG_LAST2=\$(echo ${config_review} | tail -c 3)
                     git fetch "ssh://@${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
@@ -62,7 +62,7 @@ EOF
             }
             steps {
                 sh """
-                cd ${git_repo}/${terraform_dir}/tost/telegraf
+                cd ${workspace}/${git_repo}/${terraform_dir}/tost/telegraf
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
                 """
              }
@@ -73,7 +73,7 @@ EOF
             }
             steps {
                 sh """
-                cd ${git_repo}/${terraform_dir}/tost/telegraf
+                cd ${workspace}/${git_repo}/${terraform_dir}/tost/telegraf
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}'  -var 'project_name=tost'  -var-file=app_map.tfvars -auto-approve
                 """
              }

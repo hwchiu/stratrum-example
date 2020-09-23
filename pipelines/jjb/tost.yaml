@@ -119,7 +119,7 @@
           default: 'onos'
       - string:
           name: onos_ns
-          default: 'onos-tost'
+          default: 'tost'
       - string:
           name: onos_user
           default: 'onos'
@@ -195,7 +195,7 @@
           default: '{terraform_dir}'
       - string:
           name: stratum_ns
-          default: 'stratum'
+          default: 'tost'
       - string:
           name: stratum_catalog_name
           default: 'stratum'
@@ -262,7 +262,7 @@
           default: '{terraform_dir}'
       - string:
           name: telegraf_ns
-          default: 'telegraf'
+          default: 'tost'
       - string:
           name: config_review
       - string:

@@ -87,7 +87,7 @@ EOF
             }
             steps {
                 sh '''
-                cd ${git_repo}/deployment-configs/aether/apps/${config_env}/
+                cd ${workspace}/${git_repo}/deployment-configs/aether/apps/${config_env}/
                 until rancher apps install --answers fluentbit-ans.yml --namespace ${fluentbit_ns} cattle-global-data:fluent-fluent-bit fluentbit; do :; done
                 apps=$(rancher apps -q | grep fluentbit)
                 for app in $apps; do until rancher wait $app --timeout 20; do :; done; rancher apps ls; done                
