@@ -57,8 +57,21 @@ EOF
 
                 git clone "ssh://${git_server}:29418/${git_repo}"
                 cd ${git_repo}/${terraform_dir}/tost/onos
+                if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
+                    CFG_LAST2=\$(echo ${config_review} | tail -c 3)
+                    git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
+                    cp onos.yaml tmp.yaml
+
+cat <<EOF >> config.yaml
+config:
+  review: ${config_review}
+  patchset: ${config_patchset}
+EOF
+
+                    yq merge tmp.yaml config.yaml > onos.yaml
+                    cd ..
+                fi
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
-                ls
                 """
                 }
             }
@@ -69,21 +82,6 @@ EOF
             }
             steps {
                 sh """
-                if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
-                    cd ${git_repo}
-                    CFG_LAST2=\$(echo ${config_review} | tail -c 3)
-                    git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
-                    cp production/ace-menlo/tost/onos/onos.yaml tmp.yaml
-
-cat <<EOF >> config.yaml
-config:
-  review: ${config_review}
-  patchset: ${config_patchset}
-EOF
-
-                    yq merge tmp.yaml config.yaml > production/ace-menlo/tost/onos/onos.yaml
-                    cd ..
-                fi
                 """
              }
         }

@@ -56,23 +56,10 @@ EOF
 
                 git clone "ssh://${git_server}:29418/${git_repo}"
                 cd ${git_repo}/${terraform_dir}/tost/stratum
-                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
-                ls
-                """
-                }
-            }
-        }
-        stage('Clone Config Repo') {
-            options {
-                timeout(time: 10, unit: "SECONDS")
-            }
-            steps {
-                sh """
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
-                    cd ${git_repo}
                     CFG_LAST2=\$(echo ${config_review} | tail -c 3)
                     git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
-                    cp production/ace-menlo/tost/stratum/stratum.yaml tmp.yaml
+                    cp stratum.yaml tmp.yaml
 
 cat <<EOF >> config.yaml
 config:
@@ -80,15 +67,13 @@ config:
   patchset: ${config_patchset}
 EOF
 
-                    yq merge tmp.yaml config.yaml > production/ace-menlo/tost/stratum/stratum.yaml
-                    cd ..
+                    yq merge tmp.yaml config.yaml > stratum.yaml
                 fi
-
+                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
                 """
-             }
+                }
+            }
         }
-
-
         stage('Uninstall Apps') {
             options {
                 timeout(time: 90, unit: "SECONDS")

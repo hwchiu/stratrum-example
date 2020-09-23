@@ -52,26 +52,14 @@ Host ${git_server}
 EOF
 
                 git clone "ssh://${git_server}:29418/${git_repo}"
+                if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
+                    CFG_LAST2=\$(echo ${config_review} | tail -c 3)
+                    git fetch "ssh://@${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
+                fi
 
                 """
                 }
             }
-        }
-
-        stage('Clone Config Repo') {
-            options {
-                timeout(time: 10, unit: "SECONDS")
-            }
-            steps {
-                sh """
-                if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
-                    cd ${git_repo}
-                    CFG_LAST2=\$(echo ${config_review} | tail -c 3)
-                    git fetch "ssh://@${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
-                    cd ..
-                fi
-                """
-             }
         }
 
         stage('Login Rancher') {
