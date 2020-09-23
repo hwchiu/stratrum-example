@@ -11,6 +11,7 @@
     rancher_cli_api: 'rancher_dev_token'
     jobs:
       - 'deploy'
+      - 'deploy-shared'
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
@@ -29,6 +30,7 @@
     rancher_cli_api: 'rancher_dev_token'
     jobs:
       - 'deploy'
+      - 'deploy-shared'
       - 'deploy-onos'
       - 'deploy-stratum'
       - 'deploy-telegraf'
@@ -75,8 +77,6 @@
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
-    registry_server: 'registry.aetherproject.org'
-    registry_user: 'admin'
     gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     scm_type: 'project-scm'
@@ -127,15 +127,6 @@
           name: onos_password
           default: 'onos_password'
       - string:
-          name: registry_server
-          default: '{registry_server}'
-      - string:
-          name: registry_user
-          default: '{registry_user}'
-      - string:
-          name: registry_password_env
-          default: 'aether_registry_password'
-      - string:
           name: config_review
       - string:
           name: config_patchset
@@ -154,8 +145,6 @@
     git_server: 'gerrit.opencord.org'
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
-    registry_server: 'registry.aetherproject.org'
-    registry_user: 'admin'
     gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     scm_type: 'project-scm'
@@ -199,15 +188,6 @@
       - string:
           name: stratum_catalog_name
           default: 'stratum'
-      - string:
-          name: registry_server
-          default: '{registry_server}'
-      - string:
-          name: registry_user
-          default: '{registry_user}'
-      - string:
-          name: registry_password_env
-          default: 'aether_registry_password'
       - string:
           name: config_review
       - string:
@@ -354,7 +334,6 @@
     git_user: 'aether_jenkins'
     git_repo: 'aether-pod-configs'
     rancher_api: 'Rancher_Dev_Terraform'
-
     gcp_credential: 'gcp_bucket_terraform'
     project-type: pipeline
     scm_type: 'project-scm'
@@ -397,3 +376,37 @@
       - string:
           name: terraform_dir
           default: '{terraform_dir}'
+
+- job-template:
+    name: '{name}-shared'
+    id: 'deploy-shared'
+    registry_server: 'registry.aetherproject.org'
+    registry_user: 'admin'
+    target_namespace: 'tost'
+    project-type: pipeline
+    scm_type: 'project-scm'
+    pipeline-scm:
+      scm:
+        - '{scm_type}'
+      script-path: pipelines/Jenkinsfile
+    logrotate:
+      daysToKeep: 7
+      numToKeep: 10
+      artifactDaysToKeep: 7
+      artifactNumToKeep: 10
+    parameters:
+      - string:
+          name: job_name
+          default: '{name}'
+      - string:
+          name: registry_server
+          default: '{registry_server}'
+      - string:
+          name: registry_user
+          default: '{registry_user}'
+      - string:
+          name: registry_password_env
+          default: 'aether_registry_password'
+      - string:
+          name: target_namespace
+          default: '{target_namespace}'
