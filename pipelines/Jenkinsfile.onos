@@ -86,7 +86,7 @@ EOF
                 """
              }
         }
-        stage('Remove PVC') {
+        stage('Remove resources') {
             options {
                 timeout(time: 300, unit: "SECONDS")
             }
@@ -94,6 +94,9 @@ EOF
                 sh """
                 pvcs=\$(kubectl -n onos-tost get pvc -lapp=onos-tost-atomix -o name)
                 for pv in \${pvcs}; do kubectl -n onos-tost delete \${pv}; done
+
+                kubectl -n ${onos_ns} delete secret onos-git-secret || true
+                kubectl -n ${onos_ns} delete secret onos-secret || true
                 """
              }
         }

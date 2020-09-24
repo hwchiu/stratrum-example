@@ -81,6 +81,7 @@ EOF
                 sh """
                 cd ${workspace}/${git_repo}/${terraform_dir}/tost/stratum
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
+                kubectl -n ${stratum_ns} delete secret stratum-git-secret || true
                 """
              }
         }
