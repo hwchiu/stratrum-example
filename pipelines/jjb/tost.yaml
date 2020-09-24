@@ -132,9 +132,6 @@
       - string:
           name: config_patchset
       - string:
-          name: config_env
-          default: '{config_env}'
-      - string:
           name: k8s_config
           default: '{k8s_config}'
 
@@ -194,9 +191,6 @@
       - string:
           name: config_patchset
       - string:
-          name: config_env
-          default: '{config_env}'
-      - string:
           name: k8s_config
           default: '{k8s_config}'
 
@@ -248,9 +242,6 @@
           name: config_review
       - string:
           name: config_patchset
-      - string:
-          name: config_env
-          default: '{config_env}'
       - string:
           name: k8s_config
           default: '{k8s_config}'
@@ -322,9 +313,6 @@
       - string:
           name: config_patchset
       - string:
-          name: config_env
-          default: '{config_env}'
-      - string:
           name: k8s_config
           default: '{k8s_config}'
 
@@ -377,6 +365,11 @@
       - string:
           name: terraform_dir
           default: '{terraform_dir}'
+      - string:
+          name: config_review
+      - string:
+          name: config_patchset
+
 
 - job-template:
     name: '{name}-shared'
