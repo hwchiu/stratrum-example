@@ -58,7 +58,7 @@ EOF
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
                     CFG_LAST2=\$(echo ${config_review} | tail -c 3)
                     git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
-                    cp stratum.yaml tmp.yaml
+                    cp ${terraform_dir}/tost/stratum/stratum.yaml tmp.yaml
 
 cat <<EOF >> config.yaml
 config:
@@ -66,7 +66,7 @@ config:
   patchset: ${config_patchset}
 EOF
 
-                    yq merge tmp.yaml config.yaml > stratum.yaml
+                    yq merge tmp.yaml config.yaml > ${terraform_dir}/tost/stratum/stratum.yaml
                 fi
                 cd ${terraform_dir}/tost/stratum
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
