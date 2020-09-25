@@ -54,7 +54,7 @@ Host ${git_server}
 EOF
 
                 git clone "ssh://${git_server}:29418/${git_repo}"
-                cd ${workspace}/${git_repo}/${terraform_dir}/tost/stratum
+                cd ${workspace}/${git_repo}/
                 if [ ! -z ${config_review} ] && [ ! -z ${config_patchset} ]; then
                     CFG_LAST2=\$(echo ${config_review} | tail -c 3)
                     git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
@@ -68,6 +68,7 @@ EOF
 
                     yq merge tmp.yaml config.yaml > stratum.yaml
                 fi
+                cd ${terraform_dir}/tost/stratum
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
                 """
                 }

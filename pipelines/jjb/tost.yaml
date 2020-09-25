@@ -116,9 +116,6 @@
           name: terraform_dir
           default: '{terraform_dir}'
       - string:
-          name: onos_catalog_name
-          default: 'onos'
-      - string:
           name: onos_ns
           default: 'tost'
       - string:
@@ -183,9 +180,6 @@
       - string:
           name: stratum_ns
           default: 'tost'
-      - string:
-          name: stratum_catalog_name
-          default: 'stratum'
       - string:
           name: config_review
       - string:
