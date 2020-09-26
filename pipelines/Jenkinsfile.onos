@@ -93,8 +93,8 @@ EOF
             }
             steps {
                 sh """
-                pvcs=\$(kubectl -n onos-tost get pvc -lapp=onos-tost-atomix -o name)
-                for pv in \${pvcs}; do kubectl -n onos-tost delete \${pv}; done
+                pvcs=\$(kubectl -n ${onos_ns} get pvc -lapp=onos-tost-atomix -o name)
+                for pv in \${pvcs}; do kubectl -n ${onos_ns} delete \${pv}; done
 
                 kubectl -n ${onos_ns} delete secret onos-git-secret || true
                 kubectl -n ${onos_ns} delete secret onos-secret || true
