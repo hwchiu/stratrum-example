@@ -101,6 +101,15 @@ EOF
                 """
              }
         }
+        stage('Push Secrets') {
+            steps {
+                sh """
+
+                kubectl -n ${onos_ns} create secret generic onos-git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
+                kubectl -n ${onos_ns} create secret generic onos-secret --from-literal=username=${onos_user} --from-literal=password=${onos_password}
+                """
+            }
+        }
         stage('Install apps') {
             options {
                 timeout(time: 600, unit: "SECONDS")
@@ -111,15 +120,6 @@ EOF
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
                 """
              }
-        }
-        stage('Push Secrets') {
-            steps {
-                sh """
-
-                kubectl -n ${onos_ns} create secret generic onos-git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
-                kubectl -n ${onos_ns} create secret generic onos-secret --from-literal=username=${onos_user} --from-literal=password=${onos_password}
-                """
-            }
         }
 
     }

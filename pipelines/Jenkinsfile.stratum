@@ -86,6 +86,15 @@ EOF
                 """
              }
         }
+        stage('Push Secrets') {
+            steps {
+                sh """
+
+                kubectl -n ${stratum_ns} create secret generic stratum-git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
+
+                """
+            }
+        }
         stage('Install apps') {
             options {
                 timeout(time: 600, unit: "SECONDS")
@@ -97,16 +106,6 @@ EOF
                 """
              }
         }
-        stage('Push Secrets') {
-            steps {
-                sh """
-
-                kubectl -n ${stratum_ns} create secret generic stratum-git-secret --from-literal=username=${git_user} --from-literal=password=${git_password}
-
-                """
-            }
-        }
-
     }
     post {
         always {
