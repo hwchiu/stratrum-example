@@ -78,7 +78,7 @@ EOF
         stage('Install shared resources') {
             steps {
                 sh(script: "date -u")
-                    build(job: "${params.job_name}-shared")
+                build(job: "${params.job_name}-shared")
             }
         }
         stage('Parallel Stage') {
@@ -86,24 +86,33 @@ EOF
                 stage('onos') {
                     steps {
                         sh(script: "date -u")
-                        build(job: "${params.job_name}-onos")
+                        build(job: "${params.job_name}-onos", parameters: [
+                            string(name: 'config_review', value: "${config_review}"),
+                            string(name: 'config_patchset', value: "${config_patchset}")
+                        ])
                     }
                 }
                 stage('stratum') {
                     steps {
                         sh(script: "date -u")
-                        build(job: "${params.job_name}-stratum")
+                        build(job: "${params.job_name}-stratum", parameters: [
+                            string(name: 'config_review', value: "${config_review}"),
+                            string(name: 'config_patchset', value: "${config_patchset}")
+                        ])
                     }
                 }
                 stage('telegraf') {
                     steps {
                         sh(script: "date -u")
-                        build(job: "${params.job_name}-telegraf")
+                        build(job: "${params.job_name}-telegraf", parameters: [
+                            string(name: 'config_review', value: "${config_review}"),
+                            string(name: 'config_patchset', value: "${config_patchset}")
+                        ])
                     }
                 }
             }
         }
-    stage('E2E Testing') {
+        stage('E2E Testing') {
             options {
                 timeout(time: 120, unit: "SECONDS")
             }
