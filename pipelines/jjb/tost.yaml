@@ -18,6 +18,27 @@
       - 'deploy-fluentbit'
 
 - project:
+    name: deploy-menlo-tost-staging
+    rancher_cluster: 'ace-menlo'
+    k8s_config: 'menlo_staging_config'
+    config_env: 'menlo-tost-dev'
+    terraform_dir: 'staging/ace-onf-menlo'
+    rancher_api: 'rancher_staging_terraform'
+    #remove after migrating to terraform
+    rancher_context: 'c-dl6qn'
+    rancher_project: 'p-npzjd'
+    rancher_server: 'https://staging.aether.onlab.us/'
+    rancher_cli_api: 'rancher_staging_token'
+    jobs:
+      - 'deploy'
+      - 'deploy-shared'
+      - 'deploy-onos'
+      - 'deploy-stratum'
+      - 'deploy-telegraf'
+      - 'deploy-fluentbit'
+
+
+- project:
     name: deploy-menlo-tost-dev
     rancher_cluster: 'tost-dev'
     k8s_config: 'tost-dev-k8s'
@@ -64,7 +85,15 @@
          url: 'https://github.com/hwchiu/stratum-example'
          branches:
            - origin/production
-        
+
+- scm:
+    name: staging-scm
+    scm:
+      - git:
+         url: 'https://github.com/hwchiu/stratum-example'
+         branches:
+           - origin/staging
+
 - scm:
     name: project-scm
     scm:
