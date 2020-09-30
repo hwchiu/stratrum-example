@@ -27,9 +27,10 @@ pipeline {
                 '''
             }
         }
-        stage('Perform Terraform') {
+        stage('Reinstall shared resources') {
              steps {
                 sh """
+                kubectl -n ${target_namespace} delete secret aether-registry-credential || true
                 kubectl -n ${target_namespace} create secret docker-registry aether-registry-credential  --docker-server=${registry_server} --docker-username=${registry_user} --docker-password=${registry_password}
                 """
              }

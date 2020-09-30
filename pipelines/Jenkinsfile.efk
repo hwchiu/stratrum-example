@@ -74,13 +74,6 @@ EOF
                 """
              }
         }
-
-        stage('Install shared resources') {
-            steps {
-                sh(script: "date -u")
-                build(job: "${params.job_name}-shared")
-            }
-        }
         stage('Parallel Stage') {
             parallel {
                 stage('elasticsearch') {
