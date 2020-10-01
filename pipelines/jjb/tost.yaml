@@ -24,17 +24,15 @@
       config_env: "menlo-tost-dev"
       terraform_dir: "staging/ace-menlo"
       rancher_api: "rancher_staging_terraform"
-      #remove after migrating to terraform
-      rancher_context: "c-dl6qn"
-      rancher_project: "p-npzjd"
-      rancher_server: "https://staging.aether.onlab.us/"
-      rancher_cli_api: "rancher_staging_token"
       jobs:
           - "deploy"
           - "deploy-shared"
           - "deploy-onos"
           - "deploy-stratum"
           - "deploy-telegraf"
+          - "deploy-efk"
+          - "deploy-elasticsearch"
+          - "deploy-kibana"
           - "deploy-fluentbit"
 
 - project:
@@ -61,11 +59,6 @@
       config_env: "menlo-prd"
       terraform_dir: "production/ace-menlo"
       rancher_api: "rancher_prod_terraform"
-      #remove after migrating to terraform
-      rancher_context: "c-5cfd8"
-      rancher_project: "p-htfwq"
-      rancher_server: "https://aether.onlab.us/"
-      rancher_cli_api: "rancher_prod_token"
       scm_type: "prod-scm"
       jobs:
           - "deploy"
@@ -73,6 +66,9 @@
           - "deploy-onos"
           - "deploy-stratum"
           - "deploy-telegraf"
+          - "deploy-efk"
+          - "deploy-elasticsearch"
+          - "deploy-kibana"
           - "deploy-fluentbit"
 
 - scm:
