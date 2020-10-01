@@ -22,7 +22,7 @@
       rancher_cluster: "ace-menlo"
       k8s_config: "menlo_staging_config"
       config_env: "menlo-tost-dev"
-      terraform_dir: "staging/ace-onf-menlo"
+      terraform_dir: "staging/ace-menlo"
       rancher_api: "rancher_staging_terraform"
       #remove after migrating to terraform
       rancher_context: "c-dl6qn"
@@ -44,6 +44,11 @@
       config_env: "menlo-tost-dev"
       terraform_dir: "developing/menlo-tost"
       jobs:
+          - "deploy"
+          - "deploy-shared"
+          - "deploy-onos"
+          - "deploy-stratum"
+          - "deploy-telegraf"
           - "deploy-efk"
           - "deploy-elasticsearch"
           - "deploy-kibana"
