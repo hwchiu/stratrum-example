@@ -84,42 +84,45 @@ EOF
         stage('Parallel Stage') {
             parallel {
                 stage('onos') {
+                    when{
+                       expression{
+                         ${params.need_onos} == 'true'
+                       }
+                    }
                     steps {
-                        try {
                             sh(script: "date -u")
                             build(job: "${params.job_name}-onos", parameters: [
                                 string(name: 'config_review', value: "${config_review}"),
                                 string(name: 'config_patchset', value: "${config_patchset}")
                          ])
-                        } catch (NullPointerException e) {
-                            println("Not building the job ${jobName} as it doesn't exist")
-                        }
                     }
                 }
                 stage('stratum') {
+                    when{
+                       expression{
+                         ${params.need_stratum} == 'true'
+                       }
+                    }
                     steps {
-                        try {
                             sh(script: "date -u")
                             build(job: "${params.job_name}-stratum", parameters: [
                              string(name: 'config_review', value: "${config_review}"),
                              string(name: 'config_patchset', value: "${config_patchset}")
                          ])
-                        } catch (NullPointerException e) {
-                          println("Not building the job ${jobName} as it doesn't exist")
-                        }
                     }
                 }
                 stage('telegraf') {
+                    when{
+                       expression{
+                         ${params.need_telegraf} == 'true'
+                       }
+                    }
                     steps {
-                        try {
                             sh(script: "date -u")
                             build(job: "${params.job_name}-telegraf", parameters: [
                              string(name: 'config_review', value: "${config_review}"),
                                 string(name: 'config_patchset', value: "${config_patchset}")
                             ])
-                        } catch (NullPointerException e) {
-                          println("Not building the job ${jobName} as it doesn't exist")
-                        }
                     }
                 }
             }
