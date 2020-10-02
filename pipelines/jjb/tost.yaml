@@ -68,10 +68,10 @@
           - "deploy-fluentbit"
 
 - project:
-      name: deploy-argele-production
+      name: deploy-argela-production
       rancher_cluster: "ace-argela"
       k8s_config: "new_prod_ace_argela"
-      terraform_dir: "production/ace-argele"
+      terraform_dir: "production/ace-argela"
       rancher_api: "rancher_new_prod_terraform"
       need_stratum: 'false'
       need_telegraf: 'false'
