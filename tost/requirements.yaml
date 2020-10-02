@@ -1,5 +1,0 @@
----
-dependencies:
-- name: onos-classic
-  version: 0.1.1
-  repository: https://charts.onosproject.org

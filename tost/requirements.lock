@@ -1,6 +1,0 @@
-dependencies:
-- name: onos-classic
-  repository: https://charts.onosproject.org
-  version: 0.1.1
-digest: sha256:a0b724b6b0ba2cec64b7cb517a8a99396a7a4dd6d430fed73e6c04889b797a84
-generated: "2020-06-30T14:44:58.037308-07:00"
