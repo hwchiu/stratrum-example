@@ -86,7 +86,7 @@ EOF
                 stage('onos') {
                     when{
                        expression{
-                         ${params.need_onos} == 'true'
+                         params.need_onos == 'true'
                        }
                     }
                     steps {
@@ -100,7 +100,7 @@ EOF
                 stage('stratum') {
                     when{
                        expression{
-                         ${params.need_stratum} == 'true'
+                         params.need_stratum == 'true'
                        }
                     }
                     steps {
@@ -114,7 +114,7 @@ EOF
                 stage('telegraf') {
                     when{
                        expression{
-                         ${params.need_telegraf} == 'true'
+                         params.need_telegraf == 'true'
                        }
                     }
                     steps {

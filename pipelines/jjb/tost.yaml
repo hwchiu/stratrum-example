@@ -73,6 +73,8 @@
       k8s_config: "new_prod_ace_argela"
       terraform_dir: "production/ace-argele"
       rancher_api: "rancher_new_prod_terraform"
+      need_stratum: 'false'
+      need_telegraf: 'false'
       scm_type: "prod-scm"
       jobs:
           - "deploy"
@@ -272,6 +274,9 @@
 - job-template:
       name: "{name}"
       id: "deploy"
+      need_onos: 'true'
+      need_stratum: 'true'
+      need_telegraf: 'true'
       git_server: "gerrit.opencord.org"
       git_user: "aether_jenkins"
       git_repo: "aether-pod-configs"
@@ -322,6 +327,16 @@
                 name: config_review
           - string:
                 name: config_patchset
+          - string:
+                name: need_onos
+                default: "{need_onos}"
+          - string:
+                name: need_stratum
+                default: "{need_stratum}"
+          - string:
+                name: need_telegraf
+                default: "{need_telegraf}"
+
 
 - job-template:
       name: "{name}-shared"
