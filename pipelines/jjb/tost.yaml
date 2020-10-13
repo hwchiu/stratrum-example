@@ -51,10 +51,10 @@
 
 - project:
       name: deploy-menlo-production
-      rancher_cluster: "production-edge-onf-menlo"
+      rancher_cluster: "ace-menlo"
       k8s_config: "tost-prod-k8s"
       terraform_dir: "production/ace-menlo"
-      rancher_api: "rancher_prod_terraform"
+      rancher_api: "rancher_new_prod_terraform"
       scm_type: "prod-scm"
       jobs:
           - "deploy"
