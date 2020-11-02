@@ -1,0 +1,50 @@
+- scm:
+    name: prod-scm
+    scm:
+      - git:
+          url: "https://github.com/hwchiu/stratum-example"
+          branches:
+            - origin/production
+
+- scm:
+    name: staging-scm
+    scm:
+      - git:
+          url: "https://github.com/hwchiu/stratum-example"
+          branches:
+            - origin/staging
+- scm:
+    name: project-scm
+    scm:
+      - git:
+          url: "https://github.com/hwchiu/stratum-example"
+
+- trigger:
+    name: gerrit-trigger
+    triggers:
+      - gerrit:
+          trigger-on:
+            - comment-added-contains-event:
+                comment-contains-value: "{trigger_command}"
+          silent: true
+          silent-start: true
+          projects:
+            - project-compare-type: "PLAIN"
+              project-pattern: "aether-pod-configs"
+              branches:
+                - branch-compare-type: "REG_EXP"
+                  branch-pattern: ".*"
+              file-paths:
+                - compare-type: "REG_EXP"
+                  pattern: "{pattern}"
+          skip-vote:
+            successful: true
+            failed: true
+            unstable: true
+            notbuilt: true
+          escape-quotes: false
+          no-name-and-email: false
+          notification-level: ALL
+          dynamic-trigger-enabled: false
+          trigger-for-unreviewed-patches: true
+          server-name: CORD

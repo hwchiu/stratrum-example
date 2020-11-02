@@ -1,8 +1,6 @@
 pipeline {
     agent {
-	agent {
-	    label "docker-base"
-	}
+	label "docker-base"
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
@@ -36,7 +34,7 @@ pipeline {
 
         stage('Init Terraform') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins", keyFileVariable: 'keyfile')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins_gerrit", keyFileVariable: 'keyfile')]) {
 
                 sh """#!/bin/bash
                 set -x

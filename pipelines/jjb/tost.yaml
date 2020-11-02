@@ -1,108 +1,3 @@
-- project:
-      name: hwchiu-tost
-      rancher_cluster: "hwchiu-dev"
-      k8s_config: "hwchiu-dev-cluster"
-      terraform_dir: "testing/ace-menlo"
-      #remove after migrating to terraform
-      rancher_context: "c-jt65j"
-      rancher_project: "p-ckcnb"
-      rancher_server: "https://testing.aether.onlab.us/"
-      rancher_cli_api: "rancher_dev_token"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-          - "deploy-stratum"
-          - "deploy-telegraf"
-          - "deploy-fluentbit"
-
-- project:
-      name: deploy-menlo-tost-staging
-      rancher_cluster: "ace-menlo"
-      k8s_config: "menlo_staging_config"
-      terraform_dir: "staging/ace-menlo"
-      rancher_api: "rancher_staging_terraform"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-          - "deploy-stratum"
-          - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"
-
-- project:
-      name: deploy-menlo-tost-dev
-      rancher_cluster: "tost-dev"
-      k8s_config: "tost-dev-k8s"
-      terraform_dir: "developing/menlo-tost"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-          - "deploy-stratum"
-          - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"
-
-- project:
-      name: deploy-menlo-production
-      rancher_cluster: "ace-menlo"
-      k8s_config: "tost-prod-k8s"
-      terraform_dir: "production/ace-menlo"
-      rancher_api: "rancher_new_prod_terraform"
-      scm_type: "prod-scm"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-          - "deploy-stratum"
-          - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"
-
-- project:
-      name: deploy-argela-production
-      rancher_cluster: "ace-argela"
-      k8s_config: "new_prod_ace_argela"
-      terraform_dir: "production/ace-argela"
-      rancher_api: "rancher_new_prod_terraform"
-      need_stratum: 'false'
-      need_telegraf: 'false'
-      scm_type: "prod-scm"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-
-- scm:
-      name: prod-scm
-      scm:
-          - git:
-                url: "https://github.com/hwchiu/stratum-example"
-                branches:
-                    - origin/production
-
-- scm:
-      name: staging-scm
-      scm:
-          - git:
-                url: "https://github.com/hwchiu/stratum-example"
-                branches:
-                    - origin/staging
-
-- scm:
-      name: project-scm
-      scm:
-          - git:
-                url: "https://github.com/hwchiu/stratum-example"
-
 - job-template:
       name: "{name}-onos"
       id: "deploy-onos"
@@ -112,11 +7,12 @@
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
       project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.onos
+      dsl: !include-raw-escape: pipeline/Jenkinsfile.onos
+      trigger_command: "deploy-onos"
+      triggers:
+        - gerrit-trigger:
+           trigger_command: "{trigger_command}"
+           pattern: "{terraform_dir}/tost/onos/.*"
       logrotate:
           daysToKeep: 7
           numToKeep: 10
@@ -172,12 +68,13 @@
       git_user: "aether_jenkins"
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
+      trigger_command: "deploy-stratum"
+      triggers:
+        - gerrit-trigger:
+           trigger_command: "{trigger_command}"
+           pattern: "{terraform_dir}/tost/stratum/.*"
       project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.stratum
+      dsl: !include-raw-escape: pipeline/Jenkinsfile.stratum
       logrotate:
           daysToKeep: 7
           numToKeep: 10
@@ -227,12 +124,13 @@
       git_user: "aether_jenkins"
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
+      trigger_command: "deploy-telegraf"
+      triggers:
+        - gerrit-trigger:
+           trigger_command: "{trigger_command}"
+           pattern: "{terraform_dir}/tost/telegraf/.*"
       project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.telegraf
+      dsl: !include-raw-escape: pipeline/Jenkinsfile.telegraf
       logrotate:
           daysToKeep: 7
           numToKeep: 10
@@ -282,12 +180,13 @@
       git_repo: "aether-pod-configs"
       rancher_api: "Rancher_Dev_Terraform"
       gcp_credential: "gcp_bucket_terraform"
+      trigger_command: "deploy-tost"
+      triggers:
+        - gerrit-trigger:
+           trigger_command: "{trigger_command}"
+           pattern: "{terraform_dir}/tost.*"
       project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile
+      dsl: !include-raw-escape: pipeline/Jenkinsfile
       logrotate:
           daysToKeep: 7
           numToKeep: 10
@@ -342,14 +241,10 @@
       name: "{name}-shared"
       id: "deploy-shared"
       registry_server: "registry.aetherproject.org"
-      registry_user: "admin"
+      registry_user: "aether_jekins"
       target_namespace: "tost"
       project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.shared
+      dsl: !include-raw-escape: pipeline/Jenkinsfile.shared
       logrotate:
           daysToKeep: 7
           numToKeep: 10
@@ -371,218 +266,6 @@
           - string:
                 name: target_namespace
                 default: "{target_namespace}"
-          - string:
-                name: k8s_config
-                default: "{k8s_config}"
-
-##
-# EFK
-##
-
-- job-template:
-      name: "{name}-efk"
-      id: "deploy-efk"
-      git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
-      git_repo: "aether-pod-configs"
-      rancher_api: "Rancher_Dev_Terraform"
-      gcp_credential: "gcp_bucket_terraform"
-      project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.efk
-      logrotate:
-          daysToKeep: 7
-          numToKeep: 10
-          artifactDaysToKeep: 7
-          artifactNumToKeep: 10
-      parameters:
-          - string:
-                name: job_name
-                default: "{name}"
-          - string:
-                name: gcp_credential
-                default: "{gcp_credential}"
-          - string:
-                name: k8s_config
-                default: "{k8s_config}"
-          - string:
-                name: rancher_api_env
-                default: "{rancher_api}"
-          - string:
-                name: git_repo
-                default: "{git_repo}"
-          - string:
-                name: git_server
-                default: "{git_server}"
-          - string:
-                name: git_user
-                default: "{git_user}"
-          - string:
-                name: rancher_cluster
-                default: "{rancher_cluster}"
-          - string:
-                name: terraform_dir
-                default: "{terraform_dir}"
-          - string:
-                name: config_review
-          - string:
-                name: config_patchset
-
-- job-template:
-      name: "{name}-elasticsearch"
-      id: "deploy-elasticsearch"
-      rancher_api: "Rancher_Dev_Terraform"
-      git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
-      git_repo: "aether-pod-configs"
-      gcp_credential: "gcp_bucket_terraform"
-      project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.elasticsearch
-      logrotate:
-          daysToKeep: 7
-          numToKeep: 10
-          artifactDaysToKeep: 7
-          artifactNumToKeep: 10
-      parameters:
-          - string:
-                name: gcp_credential
-                default: "{gcp_credential}"
-          - string:
-                name: rancher_cluster
-                default: "{rancher_cluster}"
-          - string:
-                name: rancher_api_env
-                default: "{rancher_api}"
-          - string:
-                name: git_repo
-                default: "{git_repo}"
-          - string:
-                name: git_server
-                default: "{git_server}"
-          - string:
-                name: git_user
-                default: "{git_user}"
-          - string:
-                name: terraform_dir
-                default: "{terraform_dir}"
-          - string:
-                name: fluentbit_ns
-                default: "logging"
-          - string:
-                name: config_review
-          - string:
-                name: config_patchset
-          - string:
-                name: k8s_config
-                default: "{k8s_config}"
-
-- job-template:
-      name: "{name}-kibana"
-      id: "deploy-kibana"
-      rancher_api: "Rancher_Dev_Terraform"
-      git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
-      git_repo: "aether-pod-configs"
-      gcp_credential: "gcp_bucket_terraform"
-      project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.kibana
-      logrotate:
-          daysToKeep: 7
-          numToKeep: 10
-          artifactDaysToKeep: 7
-          artifactNumToKeep: 10
-      parameters:
-          - string:
-                name: gcp_credential
-                default: "{gcp_credential}"
-          - string:
-                name: rancher_cluster
-                default: "{rancher_cluster}"
-          - string:
-                name: rancher_api_env
-                default: "{rancher_api}"
-          - string:
-                name: git_repo
-                default: "{git_repo}"
-          - string:
-                name: git_server
-                default: "{git_server}"
-          - string:
-                name: git_user
-                default: "{git_user}"
-          - string:
-                name: terraform_dir
-                default: "{terraform_dir}"
-          - string:
-                name: fluentbit_ns
-                default: "logging"
-          - string:
-                name: config_review
-          - string:
-                name: config_patchset
-          - string:
-                name: k8s_config
-                default: "{k8s_config}"
-
-- job-template:
-      name: "{name}-fluentbit"
-      id: "deploy-fluentbit"
-      rancher_api: "Rancher_Dev_Terraform"
-      git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
-      git_repo: "aether-pod-configs"
-      gcp_credential: "gcp_bucket_terraform"
-      project-type: pipeline
-      scm_type: "project-scm"
-      pipeline-scm:
-          scm:
-              - "{scm_type}"
-          script-path: pipelines/Jenkinsfile.fluentbit
-      logrotate:
-          daysToKeep: 7
-          numToKeep: 10
-          artifactDaysToKeep: 7
-          artifactNumToKeep: 10
-      parameters:
-          - string:
-                name: gcp_credential
-                default: "{gcp_credential}"
-          - string:
-                name: rancher_cluster
-                default: "{rancher_cluster}"
-          - string:
-                name: rancher_api_env
-                default: "{rancher_api}"
-          - string:
-                name: git_repo
-                default: "{git_repo}"
-          - string:
-                name: git_server
-                default: "{git_server}"
-          - string:
-                name: git_user
-                default: "{git_user}"
-          - string:
-                name: terraform_dir
-                default: "{terraform_dir}"
-          - string:
-                name: fluentbit_ns
-                default: "logging"
-          - string:
-                name: config_review
-          - string:
-                name: config_patchset
           - string:
                 name: k8s_config
                 default: "{k8s_config}"

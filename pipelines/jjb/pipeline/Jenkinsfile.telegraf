@@ -1,8 +1,6 @@
 pipeline {
     agent {
-	agent {
-	    label "docker-base"
-	}
+	label "docker-base"
     }
     environment {
         KUBECONFIG = credentials("${params.k8s_config}")
@@ -12,7 +10,7 @@ pipeline {
     stages {
         stage('Install tools') {
             steps {
-                sh '''
+                sh """
                 set -x
                 apt-get update -y
                 apt-get install -y curl wget jq git unzip
@@ -26,12 +24,12 @@ pipeline {
                 unzip terraform_0.13.2_linux_amd64.zip
                 mv terraform /usr/local/bin
                 terraform version
-                '''
+                """
             }
         }
         stage('Init Terraform') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins", keyFileVariable: 'keyfile')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins_gerrit", keyFileVariable: 'keyfile')]) {
                 sh """#!/bin/bash
                 set -x
                 mkdir -p ~/.ssh
@@ -50,7 +48,7 @@ EOF
                     git fetch "ssh://${git_server}:29418/${git_repo}" refs/changes/\${CFG_LAST2}/${config_review}/${config_patchset} && git checkout FETCH_HEAD
                     git checkout FETCH_HEAD
                 fi
-                cd ${terraform_dir}/efk/fluentbit
+                cd ${terraform_dir}/tost/telegraf
                 GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform init
                 """
                 }
@@ -62,8 +60,8 @@ EOF
             }
             steps {
                 sh """
-                cd ${workspace}/${git_repo}/${terraform_dir}/efk/fluentbit
-                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=logging' -var-file=app_map.tfvars -auto-approve
+                cd ${workspace}/${git_repo}/${terraform_dir}/tost/telegraf
+                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform destroy -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}' -var 'project_name=tost' -var-file=app_map.tfvars -auto-approve
                 """
              }
         }
@@ -73,8 +71,8 @@ EOF
             }
             steps {
                 sh """
-                cd ${workspace}/${git_repo}/${terraform_dir}/efk/fluentbit
-                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}'  -var 'project_name=logging'  -var-file=app_map.tfvars -auto-approve
+                cd ${workspace}/${git_repo}/${terraform_dir}/tost/telegraf
+                GOOGLE_BACKEND_CREDENTIALS=${gcp} terraform apply -var-file=${rancher_dev} -var 'cluster_name=${rancher_cluster}'  -var 'project_name=tost'  -var-file=app_map.tfvars -auto-approve
                 """
              }
         }
