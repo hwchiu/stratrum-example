@@ -1,24 +1,3 @@
-- scm:
-    name: prod-scm
-    scm:
-      - git:
-          url: "https://github.com/hwchiu/stratum-example"
-          branches:
-            - origin/production
-
-- scm:
-    name: staging-scm
-    scm:
-      - git:
-          url: "https://github.com/hwchiu/stratum-example"
-          branches:
-            - origin/staging
-- scm:
-    name: project-scm
-    scm:
-      - git:
-          url: "https://github.com/hwchiu/stratum-example"
-
 - trigger:
     name: gerrit-trigger
     triggers:

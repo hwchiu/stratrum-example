@@ -1,38 +1,20 @@
 - project:
-      name: hwchiu-tost
-      rancher_cluster: "hwchiu-dev"
-      k8s_config: "hwchiu-dev-cluster"
-      terraform_dir: "testing/ace-menlo"
-      jobs:
-          - "deploy"
-          - "deploy-shared"
-          - "deploy-onos"
-          - "deploy-stratum"
-          - "deploy-telegraf"
-          - "deploy-fluentbit"
-
-- project:
       name: deploy-menlo-tost-staging
       rancher_cluster: "ace-menlo"
-      k8s_config: "menlo_staging_config"
+      k8s_config: "k8s-menlo-tost-staging"
       terraform_dir: "staging/ace-menlo"
-      rancher_api: "rancher_staging_terraform"
+      rancher_api: "rancher_staging_terraform_access"
       jobs:
           - "deploy"
           - "deploy-shared"
           - "deploy-onos"
           - "deploy-stratum"
           - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"
-
 - project:
       name: deploy-menlo-tost-dev
       rancher_cluster: "tost-dev"
       k8s_config: "k8s-menlo-tost-dev"
-      terraform_dir: "developing/menlo-tost"
+      terraform_dir: "testing/menlo-tost"
       rancher_api: "rancher_dev_terraform_access"
       jobs:
           - "deploy"
@@ -40,25 +22,15 @@
           - "deploy-onos"
           - "deploy-stratum"
           - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"
-
 - project:
       name: deploy-menlo-production
       rancher_cluster: "ace-menlo"
-      k8s_config: "tost-prod-k8s"
+      k8s_config: "k8s-menlo-tost-prod"
       terraform_dir: "production/ace-menlo"
-      rancher_api: "rancher_new_prod_terraform"
-      scm_type: "prod-scm"
+      rancher_api: "rancher_prod_terraform_access"
       jobs:
           - "deploy"
           - "deploy-shared"
           - "deploy-onos"
           - "deploy-stratum"
           - "deploy-telegraf"
-          - "deploy-efk"
-          - "deploy-elasticsearch"
-          - "deploy-kibana"
-          - "deploy-fluentbit"

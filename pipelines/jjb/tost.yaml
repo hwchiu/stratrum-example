@@ -3,7 +3,7 @@
       id: "deploy-onos"
       rancher_api: "Rancher_Dev_Terraform"
       git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
+      git_user: "jenkins"
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
       project-type: pipeline
@@ -65,7 +65,7 @@
       id: "deploy-stratum"
       rancher_api: "Rancher_Dev_Terraform"
       git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
+      git_user: "jenkins"
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
       trigger_command: "deploy-stratum"
@@ -121,7 +121,7 @@
       id: "deploy-telegraf"
       rancher_api: "Rancher_Dev_Terraform"
       git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
+      git_user: "jenkins"
       git_repo: "aether-pod-configs"
       gcp_credential: "gcp_bucket_terraform"
       trigger_command: "deploy-telegraf"
@@ -176,7 +176,7 @@
       need_stratum: 'true'
       need_telegraf: 'true'
       git_server: "gerrit.opencord.org"
-      git_user: "aether_jenkins"
+      git_user: "jenkins"
       git_repo: "aether-pod-configs"
       rancher_api: "Rancher_Dev_Terraform"
       gcp_credential: "gcp_bucket_terraform"

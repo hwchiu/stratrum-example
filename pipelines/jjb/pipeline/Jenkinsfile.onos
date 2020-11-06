@@ -37,7 +37,7 @@ pipeline {
         }
     stage('Init Terraform') {
         steps {
-                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins_gerrit", keyFileVariable: 'keyfile')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: "aether_jenkins", keyFileVariable: 'keyfile')]) {
 
                 sh """#!/bin/bash
                 set -x
